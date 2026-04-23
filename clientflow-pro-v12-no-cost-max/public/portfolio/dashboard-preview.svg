@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+  <rect width="1600" height="900" rx="36" fill="#081120"/>
+  <rect x="40" y="40" width="1520" height="820" rx="32" fill="#0D1728" stroke="#273449"/>
+  <rect x="88" y="110" width="340" height="680" rx="28" fill="#101C31" stroke="#324155"/>
+  <rect x="468" y="110" width="1044" height="120" rx="28" fill="#101C31" stroke="#324155"/>
+  <rect x="468" y="270" width="500" height="240" rx="28" fill="#111F37" stroke="#324155"/>
+  <rect x="1012" y="270" width="500" height="240" rx="28" fill="#111F37" stroke="#324155"/>
+  <rect x="468" y="550" width="1044" height="240" rx="28" fill="#111F37" stroke="#324155"/>
+  <circle cx="144" cy="162" r="28" fill="#8B5CF6"/>
+  <text x="188" y="172" fill="#E5EEFB" font-family="Inter, Arial" font-size="36" font-weight="700">ClientFlow Pro</text>
+  <text x="506" y="174" fill="#E5EEFB" font-family="Inter, Arial" font-size="44" font-weight="700">Dashboard preview — KPI, tasks, revenue, deadlines</text>
+  <text x="506" y="212" fill="#94A3B8" font-family="Inter, Arial" font-size="24">Free-first portfolio build • React + TypeScript • Local-first storage</text>
+  <rect x="506" y="306" width="180" height="86" rx="20" fill="#8B5CF6" fill-opacity="0.15" stroke="#8B5CF6"/>
+  <rect x="714" y="306" width="180" height="86" rx="20" fill="#22C55E" fill-opacity="0.14" stroke="#22C55E"/>
+  <rect x="922" y="306" width="180" height="86" rx="20" fill="#38BDF8" fill-opacity="0.14" stroke="#38BDF8"/>
+  <rect x="1130" y="306" width="180" height="86" rx="20" fill="#F59E0B" fill-opacity="0.14" stroke="#F59E0B"/>
+  <text x="538" y="360" fill="#E5EEFB" font-family="Inter, Arial" font-size="18">KPI card</text>
+  <text x="746" y="360" fill="#E5EEFB" font-family="Inter, Arial" font-size="18">Workflow</text>
+  <text x="954" y="360" fill="#E5EEFB" font-family="Inter, Arial" font-size="18">Calendar</text>
+  <text x="1162" y="360" fill="#E5EEFB" font-family="Inter, Arial" font-size="18">Reports</text>
+  <text x="122" y="260" fill="#94A3B8" font-family="Inter, Arial" font-size="22">Dashboard</text>
+  <text x="122" y="316" fill="#94A3B8" font-family="Inter, Arial" font-size="22">Clients</text>
+  <text x="122" y="372" fill="#94A3B8" font-family="Inter, Arial" font-size="22">Tasks</text>
+  <text x="122" y="428" fill="#94A3B8" font-family="Inter, Arial" font-size="22">Reports</text>
+  <text x="122" y="484" fill="#94A3B8" font-family="Inter, Arial" font-size="22">Activity</text>
+  <text x="122" y="540" fill="#94A3B8" font-family="Inter, Arial" font-size="22">Settings</text>
+</svg>
