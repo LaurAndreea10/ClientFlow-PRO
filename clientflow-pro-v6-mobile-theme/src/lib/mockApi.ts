@@ -1,0 +1,196 @@
+import type { Client, DashboardStats, Note, Task, User } from '../types'
+import { buildSeed } from '../data/seed'
+import { readStorage, uid, writeStorage } from './storage'
+
+const SESSION_KEY = 'clientflow_session'
+const CLIENTS_KEY = 'clientflow_clients'
+const TASKS_KEY = 'clientflow_tasks'
+const NOTES_KEY = 'clientflow_notes'
+
+function getUserId() {
+  return getSession()?.id ?? 'guest'
+}
+
+function ensureSeeded(userId: string) {
+  const clients = readStorage<Client[]>(CLIENTS_KEY, [])
+  const tasks = readStorage<Task[]>(TASKS_KEY, [])
+  const notes = readStorage<Note[]>(NOTES_KEY, [])
+
+  const hasUserData = clients.some((item) => item.userId === userId)
+  if (!hasUserData) {
+    const seed = buildSeed(userId)
+    writeStorage(CLIENTS_KEY, [...clients, ...seed.clients])
+    writeStorage(TASKS_KEY, [...tasks, ...seed.tasks])
+    writeStorage(NOTES_KEY, [...notes, ...seed.notes])
+  }
+}
+
+export function getSession(): User | null {
+  return readStorage<User | null>(SESSION_KEY, null)
+}
+
+export async function login(email: string, _password: string) {
+  const user: User = {
+    id: uid('user'),
+    email,
+    fullName: email.split('@')[0].replace(/[._-]/g, ' '),
+  }
+  writeStorage(SESSION_KEY, user)
+  ensureSeeded(user.id)
+  return user
+}
+
+export async function register(fullName: string, email: string, _password: string) {
+  const user: User = {
+    id: uid('user'),
+    email,
+    fullName,
+  }
+  writeStorage(SESSION_KEY, user)
+  ensureSeeded(user.id)
+  return user
+}
+
+export async function logout() {
+  localStorage.removeItem(SESSION_KEY)
+}
+
+export async function getClients() {
+  const userId = getUserId()
+  return readStorage<Client[]>(CLIENTS_KEY, []).filter((item) => item.userId === userId)
+}
+
+export async function createClient(payload: Omit<Client, 'id' | 'createdAt' | 'userId'>) {
+  const userId = getUserId()
+  const next: Client = {
+    ...payload,
+    id: uid('client'),
+    userId,
+    createdAt: new Date().toISOString(),
+  }
+  const clients = readStorage<Client[]>(CLIENTS_KEY, [])
+  writeStorage(CLIENTS_KEY, [next, ...clients])
+  return next
+}
+
+export async function updateClient(id: string, payload: Partial<Client>) {
+  const clients = readStorage<Client[]>(CLIENTS_KEY, [])
+  let updated: Client | null = null
+  const next = clients.map((item) => {
+    if (item.id !== id) return item
+    updated = { ...item, ...payload }
+    return updated
+  })
+  writeStorage(CLIENTS_KEY, next)
+  if (!updated) throw new Error('Client not found')
+  return updated
+}
+
+export async function deleteClient(id: string) {
+  const clients = readStorage<Client[]>(CLIENTS_KEY, [])
+  const tasks = readStorage<Task[]>(TASKS_KEY, [])
+  const notes = readStorage<Note[]>(NOTES_KEY, [])
+  writeStorage(CLIENTS_KEY, clients.filter((item) => item.id !== id))
+  writeStorage(TASKS_KEY, tasks.filter((item) => item.clientId !== id))
+  writeStorage(NOTES_KEY, notes.filter((item) => item.clientId !== id))
+  return true
+}
+
+export async function getTasks() {
+  const userId = getUserId()
+  return readStorage<Task[]>(TASKS_KEY, []).filter((item) => item.userId === userId)
+}
+
+export async function createTask(payload: Omit<Task, 'id' | 'createdAt' | 'userId'>) {
+  const userId = getUserId()
+  const next: Task = {
+    ...payload,
+    id: uid('task'),
+    userId,
+    createdAt: new Date().toISOString(),
+  }
+  const tasks = readStorage<Task[]>(TASKS_KEY, [])
+  writeStorage(TASKS_KEY, [next, ...tasks])
+  return next
+}
+
+export async function updateTask(id: string, payload: Partial<Task>) {
+  const tasks = readStorage<Task[]>(TASKS_KEY, [])
+  let updated: Task | null = null
+  const next = tasks.map((item) => {
+    if (item.id !== id) return item
+    updated = { ...item, ...payload }
+    return updated
+  })
+  writeStorage(TASKS_KEY, next)
+  if (!updated) throw new Error('Task not found')
+  return updated
+}
+
+export async function deleteTask(id: string) {
+  const tasks = readStorage<Task[]>(TASKS_KEY, [])
+  writeStorage(TASKS_KEY, tasks.filter((item) => item.id !== id))
+  return true
+}
+
+export async function getNotes(clientId: string) {
+  const userId = getUserId()
+  return readStorage<Note[]>(NOTES_KEY, []).filter((item) => item.userId === userId && item.clientId === clientId)
+}
+
+export async function createNote(clientId: string, content: string) {
+  const userId = getUserId()
+  const next: Note = {
+    id: uid('note'),
+    userId,
+    clientId,
+    content,
+    createdAt: new Date().toISOString(),
+  }
+  const notes = readStorage<Note[]>(NOTES_KEY, [])
+  writeStorage(NOTES_KEY, [next, ...notes])
+  return next
+}
+
+export async function getClientById(id: string) {
+  const clients = await getClients()
+  return clients.find((item) => item.id === id) ?? null
+}
+
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const clients = await getClients()
+  const tasks = await getTasks()
+  const totalClients = clients.length
+  const activeTasks = tasks.filter((item) => item.status !== 'done').length
+  const completedTasks = tasks.filter((item) => item.status === 'done').length
+  const revenue = clients.reduce((sum, client) => sum + client.monthlyValue, 0)
+  return { totalClients, activeTasks, completedTasks, revenue }
+}
+
+export function exportWorkspaceData() {
+  const userId = getUserId()
+  return {
+    session: getSession(),
+    clients: readStorage<Client[]>(CLIENTS_KEY, []).filter((item) => item.userId === userId),
+    tasks: readStorage<Task[]>(TASKS_KEY, []).filter((item) => item.userId === userId),
+    notes: readStorage<Note[]>(NOTES_KEY, []).filter((item) => item.userId === userId),
+    exportedAt: new Date().toISOString(),
+  }
+}
+
+export async function updateProfile(fullName: string, email: string) {
+  const current = getSession()
+  if (!current) throw new Error('No active session')
+  const next: User = { ...current, fullName, email }
+  writeStorage(SESSION_KEY, next)
+  return next
+}
+
+export async function resetWorkspaceData() {
+  const userId = getUserId()
+  writeStorage(CLIENTS_KEY, readStorage<Client[]>(CLIENTS_KEY, []).filter((item) => item.userId !== userId))
+  writeStorage(TASKS_KEY, readStorage<Task[]>(TASKS_KEY, []).filter((item) => item.userId !== userId))
+  writeStorage(NOTES_KEY, readStorage<Note[]>(NOTES_KEY, []).filter((item) => item.userId !== userId))
+  ensureSeeded(userId)
+  return true
+}
