@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --include=dev
 
+      - name: Ensure Vite tooling is installed
+        run: npm install vite @vitejs/plugin-react --no-save
+
       - name: Build static site
         run: npm exec vite build
 
