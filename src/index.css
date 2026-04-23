@@ -572,3 +572,15 @@ button:hover {
     display: none;
   }
 }
+
+.button-secondary {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--muted-2);
+  box-shadow: none;
+}
+
+.button-secondary:hover {
+  border-color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.06);
+}
