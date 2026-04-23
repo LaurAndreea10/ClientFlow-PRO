@@ -12,15 +12,8 @@ export function TasksPage() {
   const [status, setStatus] = useState<TaskStatus>('todo')
   const [dueDate, setDueDate] = useState('')
 
-  const { data: clients = [] } = useQuery({
-    queryKey: ['clients'],
-    queryFn: getClients,
-  })
-
-  const { data: tasks = [] } = useQuery({
-    queryKey: ['tasks'],
-    queryFn: getTasks,
-  })
+  const { data: clients = [] } = useQuery({ queryKey: ['clients'], queryFn: getClients })
+  const { data: tasks = [] } = useQuery({ queryKey: ['tasks'], queryFn: getTasks })
 
   const createMutation = useMutation({
     mutationFn: createTask,
@@ -37,8 +30,7 @@ export function TasksPage() {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, nextStatus }: { id: string; nextStatus: TaskStatus }) =>
-      updateTask(id, { status: nextStatus }),
+    mutationFn: ({ id, nextStatus }: { id: string; nextStatus: TaskStatus }) => updateTask(id, { status: nextStatus }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
@@ -60,28 +52,28 @@ export function TasksPage() {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    createMutation.mutate({
-      title,
-      description,
-      clientId: clientId || null,
-      priority,
-      status,
-      dueDate,
-    })
+    createMutation.mutate({ title, description, clientId: clientId || null, priority, status, dueDate })
   }
 
   return (
     <div className="grid">
       <div className="page-header">
         <div>
+          <p className="eyebrow">Operations</p>
           <h1 className="page-title">Tasks</h1>
-          <p className="muted">Track task status and deadlines without any paid backend.</p>
+          <p className="muted">Track workload, shift status and keep delivery visible.</p>
         </div>
       </div>
 
       <div className="two-col">
         <div className="card card-pad">
-          <h2 style={{ marginTop: 0 }}>Task board</h2>
+          <div className="card-title-row">
+            <div>
+              <h2 style={{ margin: 0 }}>Task board</h2>
+              <div className="small muted">Move work from planning to done.</div>
+            </div>
+            <div className="pill">{tasksWithClient.length} tasks</div>
+          </div>
           <div className="list">
             {tasksWithClient.map((task) => (
               <div key={task.id} className="note">
@@ -90,7 +82,7 @@ export function TasksPage() {
                     <strong>{task.title}</strong>
                     <div className="small muted">{task.clientName}</div>
                   </div>
-                  <span className="badge">{task.priority}</span>
+                  <span className={`badge ${task.priority}`}>{task.priority}</span>
                 </div>
                 <p className="small" style={{ marginBottom: 10 }}>{task.description}</p>
                 <div className="toolbar">
@@ -101,12 +93,17 @@ export function TasksPage() {
                 </div>
               </div>
             ))}
-            {tasksWithClient.length === 0 ? <div className="muted">No tasks yet.</div> : null}
+            {tasksWithClient.length === 0 ? <div className="empty-state">No tasks yet.</div> : null}
           </div>
         </div>
 
         <div className="card card-pad">
-          <h2 style={{ marginTop: 0 }}>Create task</h2>
+          <div className="card-title-row">
+            <div>
+              <h2 style={{ margin: 0 }}>Create task</h2>
+              <div className="small muted">Attach it to a client or keep it general.</div>
+            </div>
+          </div>
           <form className="form-grid" onSubmit={handleSubmit}>
             <input className="input" placeholder="Task title" value={title} onChange={(e) => setTitle(e.target.value)} required />
             <textarea className="textarea" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} rows={4} />

@@ -44,9 +44,7 @@ export function ClientsPage() {
 
   const filtered = useMemo(() => {
     const term = search.toLowerCase()
-    return clients.filter((client) =>
-      `${client.name} ${client.company} ${client.email}`.toLowerCase().includes(term),
-    )
+    return clients.filter((client) => `${client.name} ${client.company} ${client.email}`.toLowerCase().includes(term))
   }, [clients, search])
 
   function handleSubmit(event: FormEvent) {
@@ -65,19 +63,27 @@ export function ClientsPage() {
     <div className="grid">
       <div className="page-header">
         <div>
+          <p className="eyebrow">Client management</p>
           <h1 className="page-title">Clients</h1>
-          <p className="muted">Manage client contacts and monthly value with free local persistence.</p>
+          <p className="muted">Organize leads, active accounts and monthly retainers from one view.</p>
         </div>
       </div>
 
       <div className="two-col">
         <div className="card card-pad">
-          <h2 style={{ marginTop: 0 }}>Client list</h2>
+          <div className="card-title-row">
+            <div>
+              <h2 style={{ margin: 0 }}>Client list</h2>
+              <div className="small muted">Search and review your current pipeline.</div>
+            </div>
+            <div className="pill">{filtered.length} visible</div>
+          </div>
+
           <div className="toolbar" style={{ marginBottom: 16 }}>
             <input
               className="input"
-              style={{ maxWidth: 320 }}
-              placeholder="Search clients..."
+              style={{ maxWidth: 360 }}
+              placeholder="Search clients, companies or email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -102,7 +108,7 @@ export function ClientsPage() {
                       <div className="small muted">{client.email}</div>
                     </td>
                     <td>{client.company}</td>
-                    <td><span className="badge">{client.status}</span></td>
+                    <td><span className={`badge ${client.status}`}>{client.status}</span></td>
                     <td>€{client.monthlyValue}</td>
                     <td>
                       <button className="button secondary" onClick={() => deleteMutation.mutate(client.id)}>
@@ -112,7 +118,7 @@ export function ClientsPage() {
                   </tr>
                 ))}
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={5} className="muted">No clients found.</td></tr>
+                  <tr><td colSpan={5}><div className="empty-state">No clients found.</div></td></tr>
                 ) : null}
               </tbody>
             </table>
@@ -120,7 +126,12 @@ export function ClientsPage() {
         </div>
 
         <div className="card card-pad">
-          <h2 style={{ marginTop: 0 }}>Add client</h2>
+          <div className="card-title-row">
+            <div>
+              <h2 style={{ margin: 0 }}>Add client</h2>
+              <div className="small muted">Create a new contact card in seconds.</div>
+            </div>
+          </div>
           <form className="form-grid" onSubmit={handleSubmit}>
             <input className="input" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
             <input className="input" placeholder="Company" value={company} onChange={(e) => setCompany(e.target.value)} required />

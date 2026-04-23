@@ -1,52 +1,39 @@
-# ClientFlow Pro
+# ClientFlow Pro — Free-first portfolio app
 
-A portfolio-ready CRM and workflow dashboard built with React + TypeScript.
+ClientFlow Pro is a polished CRM-style dashboard built with React, TypeScript, Vite and React Query.
+This version is intentionally **free-first**: it works entirely in the browser using `localStorage`, so it does **not** require paid hosting, databases or API subscriptions.
+
+## What is included
+
+- mock auth flow
+- protected routes
+- dashboard metrics
+- client CRUD
+- task CRUD
+- notes per client
+- chart for client status
+- portfolio-style dark SaaS UI
 
 ## Why this version avoids costs
 
-This starter **does not require any paid service**.
-It runs locally and stores demo data in **browser localStorage** by default.
+- no Supabase required
+- no paid API required
+- no server required
+- data persists locally in the browser
 
-You can use it in two ways:
-
-1. **Completely free, no account needed**
-   - run locally
-   - use mock auth
-   - use localStorage data
-
-2. **Optional later upgrade**
-   - connect Supabase only if you want
-   - deploy on free tiers when you are ready
-
-## Features
-
-- login/register flow (mock, free)
-- protected routes
-- dashboard stats
-- clients CRUD
-- tasks CRUD
-- notes per client
-- filters and search
-- charts with Recharts
-- local persistence with localStorage
-
-## Getting started
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open the local URL shown by Vite.
+## Build for production
 
-## Demo login
-
-Use any email and password you want in this starter.
-The app creates a local mock session in your browser.
-
-Example:
-- email: demo@clientflow.local
-- password: 123456
+```bash
+npm run build
+npm run preview
+```
 
 ## Tech stack
 
@@ -56,12 +43,24 @@ Example:
 - React Router
 - TanStack Query
 - Recharts
+- localStorage as mock persistence
+
+## Upgrade path later
+
+When you want a real backend, you can swap the functions from `src/lib/mockApi.ts` with:
+
+- Supabase free tier
+- Firebase free tier
+- your own Node/Express API
+
+The rest of the UI structure can stay largely the same.
 
 ## Project structure
 
 ```bash
 src/
   components/
+  data/
   features/
   lib/
   pages/
@@ -69,35 +68,6 @@ src/
   types/
 ```
 
-## No-cost roadmap
+## Portfolio note
 
-You asked to avoid costs, so the best path is:
-
-- build locally with this version
-- publish screenshots/GIFs to GitHub
-- optionally deploy on Vercel free tier later
-- only add Supabase if you actually need real remote auth/database
-
-## If you want to add Supabase later
-
-This project is structured so you can swap the local API with a real backend later.
-Start with:
-- auth
-- clients table
-- tasks table
-- notes table
-
-But this zip itself does **not** depend on Supabase.
-
-## Suggested repo description
-
-`CRM-style client and task dashboard built with React, TypeScript, TanStack Query, and local mock API.`
-
-## What makes it portfolio-ready
-
-- real app layout
-- multiple pages
-- route protection
-- reusable cards/tables/forms
-- state management with server-style query hooks
-- persistent data, even without paid services
+This starter is designed to look stronger on GitHub than a basic todo app while still staying easy to run and free to use.

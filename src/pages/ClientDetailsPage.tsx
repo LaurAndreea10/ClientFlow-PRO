@@ -8,20 +8,9 @@ export function ClientDetailsPage() {
   const queryClient = useQueryClient()
   const [content, setContent] = useState('')
 
-  const { data: client } = useQuery({
-    queryKey: ['client', id],
-    queryFn: () => getClientById(id),
-  })
-
-  const { data: notes = [] } = useQuery({
-    queryKey: ['notes', id],
-    queryFn: () => getNotes(id),
-  })
-
-  const { data: tasks = [] } = useQuery({
-    queryKey: ['tasks'],
-    queryFn: getTasks,
-  })
+  const { data: client } = useQuery({ queryKey: ['client', id], queryFn: () => getClientById(id) })
+  const { data: notes = [] } = useQuery({ queryKey: ['notes', id], queryFn: () => getNotes(id) })
+  const { data: tasks = [] } = useQuery({ queryKey: ['tasks'], queryFn: getTasks })
 
   const addNoteMutation = useMutation({
     mutationFn: (text: string) => createNote(id, text),
@@ -45,26 +34,39 @@ export function ClientDetailsPage() {
 
   return (
     <div className="grid">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">{client.name}</h1>
-          <p className="muted">{client.company} · {client.email}</p>
+      <section className="hero">
+        <div className="hero-grid">
+          <div>
+            <p className="eyebrow">Account view</p>
+            <h1 className="page-title">{client.name}</h1>
+            <p className="muted">{client.company} · {client.email}</p>
+          </div>
+          <div className="kpi-strip">
+            <div className="kpi-mini">
+              <div className="small muted">Status</div>
+              <div style={{ marginTop: 8 }}><span className={`badge ${client.status}`}>{client.status}</span></div>
+            </div>
+            <div className="kpi-mini">
+              <div className="small muted">Monthly value</div>
+              <div className="stat-value" style={{ fontSize: '1.5rem' }}>€{client.monthlyValue}</div>
+            </div>
+            <div className="kpi-mini">
+              <div className="small muted">Phone</div>
+              <div style={{ marginTop: 8, fontWeight: 700 }}>{client.phone || '—'}</div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       <div className="two-col">
         <div className="grid">
           <div className="card card-pad">
-            <h2 style={{ marginTop: 0 }}>Overview</h2>
-            <div className="list">
-              <div><strong>Status:</strong> <span className="badge">{client.status}</span></div>
-              <div><strong>Monthly value:</strong> €{client.monthlyValue}</div>
-              <div><strong>Phone:</strong> {client.phone || '—'}</div>
+            <div className="card-title-row">
+              <div>
+                <h2 style={{ margin: 0 }}>Related tasks</h2>
+                <div className="small muted">Delivery work linked to this account.</div>
+              </div>
             </div>
-          </div>
-
-          <div className="card card-pad">
-            <h2 style={{ marginTop: 0 }}>Related tasks</h2>
             <div className="list">
               {relatedTasks.map((task) => (
                 <div key={task.id} className="note">
@@ -72,13 +74,18 @@ export function ClientDetailsPage() {
                   <div className="small muted">{task.status.replace('_', ' ')} · {task.priority}</div>
                 </div>
               ))}
-              {relatedTasks.length === 0 ? <div className="muted">No tasks linked to this client.</div> : null}
+              {relatedTasks.length === 0 ? <div className="empty-state">No tasks linked to this client.</div> : null}
             </div>
           </div>
         </div>
 
         <div className="card card-pad">
-          <h2 style={{ marginTop: 0 }}>Meeting notes</h2>
+          <div className="card-title-row">
+            <div>
+              <h2 style={{ margin: 0 }}>Meeting notes</h2>
+              <div className="small muted">Capture quick updates after calls and meetings.</div>
+            </div>
+          </div>
           <form className="form-grid" onSubmit={handleSubmit}>
             <textarea
               className="textarea"
@@ -101,7 +108,7 @@ export function ClientDetailsPage() {
                 </div>
               </div>
             ))}
-            {notes.length === 0 ? <div className="muted">No notes yet.</div> : null}
+            {notes.length === 0 ? <div className="empty-state">No notes yet.</div> : null}
           </div>
         </div>
       </div>
