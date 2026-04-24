@@ -1,18 +1,39 @@
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { login } from '../lib/mockApi'
+import { DEMO_CREDENTIALS, loginAsDemo } from '../auth/demoAuth'
 
 export function LoginPage() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('laura@example.com')
-  const [password, setPassword] = useState('123456')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    setError('')
     setLoading(true)
-    await login(email, password)
+
+    try {
+      await login(email, password)
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Invalid credentials')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleDemo() {
+    loginAsDemo()
     navigate('/dashboard')
+  }
+
+  function fillDemoCredentials() {
+    setEmail(DEMO_CREDENTIALS.email)
+    setPassword(DEMO_CREDENTIALS.password)
+    setError('')
   }
 
   return (
@@ -50,12 +71,45 @@ export function LoginPage() {
         <section className="auth-form-panel">
           <p className="eyebrow">Welcome back</p>
           <h2 className="page-title" style={{ fontSize: '2.4rem' }}>Sign in</h2>
-          <p className="muted">Use the prefilled demo credentials or type anything you want.</p>
+          <p className="muted">No account needed — try the demo workspace.</p>
+
+          <div className="sidebar-panel" style={{ marginTop: 22 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+              <div>
+                <div style={{ fontWeight: 700 }}>Demo Mode</div>
+                <p className="small muted" style={{ marginTop: 6, marginBottom: 0 }}>
+                  Explore clients, tasks, reports, calendar, kanban and settings. Changes are saved locally in this browser.
+                </p>
+              </div>
+              <span className="pill" style={{ whiteSpace: 'nowrap' }}>No signup</span>
+            </div>
+
+            <button className="button" type="button" onClick={handleDemo} style={{ width: '100%', marginTop: 16 }}>
+              Try Demo →
+            </button>
+
+            <div className="small muted" style={{ borderTop: '1px solid var(--border)', marginTop: 16, paddingTop: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                <span>Or use demo credentials:</span>
+                <button className="text-button" type="button" onClick={fillDemoCredentials}>
+                  Autofill
+                </button>
+              </div>
+              <div style={{ fontFamily: 'monospace', marginTop: 6 }}>
+                {DEMO_CREDENTIALS.email} · {DEMO_CREDENTIALS.password}
+              </div>
+            </div>
+          </div>
 
           <form className="form-grid" onSubmit={handleSubmit} style={{ marginTop: 24 }}>
-            <input className="input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-            <input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-            <button className="button" disabled={loading}>{loading ? 'Signing in...' : 'Enter dashboard'}</button>
+            <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
+            <input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+            {error && (
+              <div className="small" role="alert" style={{ color: 'var(--danger)', background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.16)', borderRadius: 12, padding: '10px 12px' }}>
+                {error}
+              </div>
+            )}
+            <button className="button secondary" disabled={loading}>{loading ? 'Signing in...' : 'Sign in'}</button>
           </form>
 
           <p className="small muted" style={{ marginTop: 16 }}>
