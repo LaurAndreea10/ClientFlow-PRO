@@ -7,7 +7,10 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import './index.css'
 
 const queryClient = new QueryClient()
-const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
+const appBaseUrl = new URL(document.querySelector<HTMLScriptElement>('script[type="module"]')?.src ?? window.location.href).pathname
+  .split('/assets/')[0]
+  .replace(/\/$/, '')
+const basename = appBaseUrl === '' || appBaseUrl === '/src/main.tsx' ? '' : appBaseUrl
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -23,7 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    const swUrl = `${import.meta.env.BASE_URL}sw.js`
+    const swUrl = `${basename || ''}/sw.js`
 
     navigator.serviceWorker.register(swUrl).catch((error) => {
       console.warn('Service worker registration failed:', error)
