@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { CommandPalette } from '../CommandPalette'
 import { DemoBadge } from '../DemoBadge'
 import { DemoTour } from '../DemoTour'
+import { LanguageSwitch } from '../LanguageSwitch'
 import { PwaStatus } from '../PwaStatus'
 import { isDemoSession } from '../../auth/demoAuth'
 import { useLanguage } from '../../lib/i18n'
@@ -101,6 +102,7 @@ export function AppLayout() {
             <h2 className="topbar-title">{t.titles[location.pathname as keyof typeof t.titles] ?? 'Workspace'}</h2>
           </div>
           <div className="topbar-actions">
+            <LanguageSwitch />
             <PwaStatus />
             <CommandPalette />
             <DemoTour />
