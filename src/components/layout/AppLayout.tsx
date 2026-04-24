@@ -12,6 +12,7 @@ import { logout, resetDemoWorkspace } from '../../lib/mockApi'
 
 const linkKeys = [
   { to: '/start-here', label: { EN: 'Start Here', RO: 'Start aici' } },
+  { to: '/demo-script', label: { EN: 'Demo Script', RO: 'Script demo' } },
   { to: '/workspace-setup', label: { EN: 'Workspace Access', RO: 'Accese workspace' } },
   { to: '/command-center', label: { EN: 'Command Center', RO: 'Command Center' } },
   { to: '/search', label: { EN: 'Search', RO: 'Căutare' } },
@@ -39,6 +40,7 @@ const linkKeys = [
 const routeTitles: Record<Language, Record<string, string>> = {
   EN: {
     '/start-here': 'Start Here demo flow',
+    '/demo-script': 'Demo Script',
     '/workspace-setup': 'Workspace access and CRM setup',
     '/command-center': 'Command Center',
     '/search': 'Global search',
@@ -64,6 +66,7 @@ const routeTitles: Record<Language, Record<string, string>> = {
   },
   RO: {
     '/start-here': 'Flux demo Start aici',
+    '/demo-script': 'Script demo',
     '/workspace-setup': 'Accese și configurare CRM',
     '/command-center': 'Command Center',
     '/search': 'Căutare globală',
