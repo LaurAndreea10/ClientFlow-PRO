@@ -6,7 +6,7 @@
 ![Vite](https://img.shields.io/badge/Vite-PWA-646CFF?logo=vite&logoColor=white)
 ![Local first](https://img.shields.io/badge/storage-localStorage-22C55E)
 
-> Complete best-of SaaS operations suite — public landing page, Start Here demo flow, workspace onboarding, industry-specific CRM configuration, domain-specific seed data, real rule-based UI permissions, team access roles, invite links, Command Center, global search, automations, notifications, CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, portfolio score, backup/restore, bilingual EN/RO interface, Supabase-ready architecture, PWA support, and GitHub Pages-safe routing.
+> Multi-industry CRM and operations suite with public landing, guided demo, role-based access, automations, bookings, invoices, local-first storage and Supabase-ready architecture.
 
 ## 🚀 Live Demo
 
@@ -44,44 +44,28 @@ No account needed. Click **Try Demo** on the landing or login page to enter inst
 ## Product docs
 
 - [Demo Script](docs/DEMO_SCRIPT.md)
+- [Manual Test Flow](docs/MANUAL_TEST_FLOW.md)
 - [Product Case Study](docs/PRODUCT_CASE_STUDY.md)
 - [Supabase-ready Architecture](docs/SUPABASE_READY.md)
 
 ## Why this project stands out
 
-ClientFlow PRO is a portfolio-ready operational dashboard that merges the strongest ideas from:
-
-- **Alpis Fusion CRM Premium** — AI assistant, premium UX, backup/restore, case-study positioning
-- **ClientFlow SaaS CRM Task Manager Automation Suite** — client operations, automations, service templates, invoicing, time tracking, client portal
-- **ALPIS ImpactPath** — mission, progress and impact storytelling
-- **Link Video Editor Studio** — demo readiness, presentation styles, export mindset and product-demo planning
-- **Beautyus Premium App** — premium service booking, salon calendar, client desk, retention automations and revenue visibility
-
-The result is a modern React + TypeScript workspace that works without a paid backend, feels like a real product, and gives recruiters or reviewers an instant, resettable demo.
+ClientFlow PRO brings together CRM, tasks, invoices, bookings, automations, role-based access and industry-specific setup in one free portfolio demo. It is local-first for easy testing, but documented for a future Supabase migration.
 
 ## Product highlights
 
-- **Public landing page** at `/#/` and `/#/landing` with product explanation, industries, roles, demo credentials and CTA buttons
-- **Start Here** recruiter flow at `/#/start-here` with the recommended guided demo
-- **Demo Script** at `/#/demo-script` plus a Markdown version in `docs/DEMO_SCRIPT.md`
-- **Workspace onboarding** from account creation with industry-specific CRM setup
-- **Industry templates** for Beauty, Mecanic auto, Kinetoterapeut, Psiholog and Custom CRM
-- **Domain-specific demo seed**: Auto, Kineto, Psychology, Beauty and Custom generate relevant clients/tasks at workspace creation
-- **Industry-aware CRM UI** in Clients, Tasks, Invoices, Services, Time Tracking, Portal, Impact and Beauty Studio
-- **Real rule-based UI permissions**: unsupported Add/Edit/Delete/Status/Run/Restore actions are disabled by role
-- **Team access management** with Admin, Angajat and Angajat nou roles
-- **Admin invite links**: admin can create employee access and copy/send a ClientFlow PRO link
-- **Command Center** for priorities, open revenue, bookings, unread notifications and next-best-actions
-- **Global Search** across clients, tasks, invoices, services, bookings, demo plans and impact goals
-- **Automation Rules** with local run engine for overdue tasks, sent invoices, beauty reminders, VIP retention and high-value leads
-- **Notifications Center** with read/unread state and generated automation notifications
-- **Portfolio Score** audit page for recruiter-facing demo readiness
-- **Public Portal Preview** route such as `/#/portal-preview/BLOOM-2026`
-- **Backup / Restore JSON** in Settings for full local workspace export/import
-- **Supabase-ready architecture note** with suggested tables, RLS sketch and migration path
-- Bilingual EN/RO interface across core flows
-- GitHub Pages-safe routing through `HashRouter`
-- PWA-ready manifest, service worker registration and offline fallback
+- Public landing page with product explanation, industries, roles, demo credentials and CTA buttons
+- Guided `Start Here` flow and in-app `Demo Script`
+- Workspace onboarding with industry-specific CRM setup
+- Templates and seed data for Beauty, Mecanic auto, Kinetoterapeut, Psiholog and Custom CRM
+- Permission-aware UI for Admin, Angajat and Angajat nou roles
+- Admin invite links for team access
+- Command Center, Global Search, Automations and Notifications
+- CRM, Tasks, Invoices, Services, Time Tracking and Beauty Studio
+- Client Portal Preview and public portal preview route
+- Portfolio Score, Case Study and Supabase-ready architecture docs
+- Backup / Restore JSON for the local workspace
+- Bilingual EN/RO interface, PWA support and GitHub Pages-safe routing
 
 ## Recommended demo flow
 
@@ -99,11 +83,9 @@ The result is a modern React + TypeScript workspace that works without a paid ba
 
 | Role | Access |
 | ---- | ------ |
-| Admin | Editează, modifică, șterge, adaugă permisiuni, gestionează accesul și are acces total |
-| Angajat | Vizualizează, adaugă și validează status client |
-| Angajat nou | View only; Add/Edit/Delete/status actions are disabled in the UI |
-
-Adminul poate crea un profil de acces cu nume, email, rol și permisiuni custom, apoi poate copia linkul `/#/accept-access/:accessId` pentru angajat.
+| Admin | Full access: add, edit, delete, manage permissions and restore backups |
+| Angajat | View, add and validate/update client status |
+| Angajat nou | View only; Add/Edit/Delete/status actions are disabled |
 
 ## Industry CRM templates
 
@@ -161,16 +143,13 @@ Required monthly cost: **€0**
 
 ## Engineering highlights
 
-- TypeScript data models for clients, custom fields, tasks, subtasks, comments, recurrence, suite modules, automations, notifications, workspace profiles and team access roles
-- Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
-- Workspace access, permission and industry seed model through `src/lib/workspaceAccess.ts`
-- Suite module storage through `src/lib/suiteStorage.ts`
+- TypeScript domain models for CRM, tasks, workspace access, automations and suite modules
+- Local data adapter through `mockApi.ts`, designed to be replaceable with a backend
+- Permission and industry seed model through `src/lib/workspaceAccess.ts`
 - Automation rule engine through `src/lib/automationEngine.ts`
 - Unified search helper through `src/lib/globalSearch.ts`
 - Supabase migration plan through `docs/SUPABASE_READY.md`
 - React Query for async state management and cache invalidation
-- Reusable toast provider for notifications and undo flows
-- First-run onboarding/demo tour persisted in localStorage
 - GitHub Actions CI for typecheck and production build
 
 ## Quality checks
@@ -182,9 +161,7 @@ npm run build
 
 ## Trade-offs
 
-- Kept the app local-first to avoid cost and deployment complexity
-- Access links and permissions are local simulations, not secure production auth yet
-- AI Copilot and automations are deterministic and local, not backed by paid APIs
-- Client portal links are simulated previews, not public secure links
-- Beauty Studio automations are local workflow states, not real SMS/email notifications
-- PDF export uses the browser print flow instead of a paid document service
+- Local-first storage keeps the demo free and easy to reset, but there is no real multi-device sync yet.
+- Access links and permissions are UI/workflow simulations; production enforcement should use backend auth and RLS.
+- AI Copilot and automations are deterministic and local, not backed by paid APIs.
+- Client portal links are simulated previews, not secure public links.
