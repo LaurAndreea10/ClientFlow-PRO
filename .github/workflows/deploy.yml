@@ -1,14 +1,20 @@
-name: Build GitHub Pages artifact
+name: Deploy built site to gh-pages
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build static site
+  build-and-deploy:
+    name: Build and deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -33,10 +39,12 @@ jobs:
       - name: Create 404.html for SPA routing
         run: cp dist/index.html dist/404.html
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+      - name: Add nojekyll marker
+        run: touch dist/.nojekyll
+
+      - name: Deploy to gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          name: github-pages-dist
-          path: dist
-          retention-days: 7
-          if-no-files-found: error
+          branch: gh-pages
+          folder: dist
+          clean: true
