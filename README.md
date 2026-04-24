@@ -1,8 +1,8 @@
 # ClientFlow PRO
 
-> All-in-one SaaS business management dashboard — clients, tasks, reports, calendar, kanban, activity log, command palette, onboarding tour, notifications, demo reset, PWA support, and settings.
+> All-in-one SaaS business management dashboard — clients, tasks, reports, calendar, kanban, activity log, command palette, onboarding tour, notifications, demo reset, bilingual EN/RO interface, PWA support, and settings.
 
-A portfolio-ready CRM and workflow dashboard built with React, TypeScript, Vite, React Query, Recharts, HashRouter routing, and local-first storage.
+A portfolio-ready CRM and workflow dashboard built with React, TypeScript, Vite, React Query, Recharts, HashRouter routing, bilingual local preferences, and local-first storage.
 
 ## 🚀 Live Demo
 
@@ -17,13 +17,15 @@ Or sign in with demo credentials:
 | Email    | `demo@clientflow.pro` |
 | Password | `demo1234`            |
 
-All changes in demo mode are saved locally in your browser — refresh freely, nothing leaves your device. Use **Reset demo data** in the sidebar to restore the polished sample workspace at any time.
+All changes in demo mode are saved locally in your browser — refresh freely, nothing leaves your device. Use **Reset demo data** in the sidebar to restore the polished sample workspace at any time. Switch **Language** in Settings to use the app in English or Romanian.
 
 ---
 
 ## Portfolio highlights
 
 - One-click demo mode with seeded CRM data, no signup friction and clear local-storage disclosure
+- Bilingual EN/RO interface for Login, Dashboard, Layout navigation and Settings
+- Romanian language preference persisted locally and applied instantly without refresh
 - 6 realistic demo clients with stages, health scores, tags, pinned accounts, custom CRM fields and monthly values
 - 10 demo tasks across todo, in-progress and done states, including subtasks, comments, recurrence and priorities
 - Resettable demo workspace so reviewers can safely explore destructive actions
@@ -47,7 +49,7 @@ All changes in demo mode are saved locally in your browser — refresh freely, n
 - Reports page with analytics charts, CSV export, JSON export and print/PDF-ready output
 - Calendar timeline with week/month views, due today, overdue and upcoming widgets
 - Activity log with local audit timeline and notification center mock
-- Settings page with demo profile, language preference, theme preference, density, reduced motion, autosave and notifications
+- Settings page with demo profile, bilingual language preference, theme preference, density, reduced motion, autosave and notifications
 - Command palette with `Ctrl/Cmd + K` for pages, clients and tasks
 - HashRouter GitHub Pages routing for reliable `/#/login` and `/#/dashboard` deep links
 - PWA-ready manifest, service worker and offline fallback page
@@ -63,6 +65,7 @@ The demo workspace is intentionally dense enough to make every major page feel a
 | Tasks | Todo, in-progress and done tasks with priorities, due dates, recurrence, subtasks and comments |
 | Notes | Client timeline notes that make detail pages feel realistic |
 | Auth | Local demo session compatible with the existing `User` type |
+| Language | English/Romanian preference stored in browser preferences |
 | Reset | Sidebar action that restores demo clients, tasks and notes |
 
 ## Cost model
@@ -100,6 +103,7 @@ src/
 - TypeScript data models for clients, custom fields, tasks, subtasks, comments and recurrence
 - Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
 - Route protection with local auth session
+- Small bilingual copy system through `src/lib/i18n.ts`
 - React Query for async state management and cache invalidation
 - Reusable toast provider for notifications and undo flows
 - First-run onboarding/demo tour persisted in localStorage
@@ -122,7 +126,7 @@ npm run build
 
 ## Repo description
 
-Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, advanced client pipeline, health score, custom fields, Kanban, recurring tasks, subtasks, comments, analytics, command palette, onboarding tour, notifications, undo actions, resettable demo data and local-first storage.
+Mobile-first bilingual CRM & workflow dashboard built with React, TypeScript, PWA support, advanced client pipeline, health score, custom fields, Kanban, recurring tasks, subtasks, comments, analytics, command palette, onboarding tour, notifications, undo actions, resettable demo data and local-first storage.
 
 ## Repo topics
 
