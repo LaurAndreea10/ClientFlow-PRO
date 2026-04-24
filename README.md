@@ -1,6 +1,6 @@
 # ClientFlow PRO
 
-> Complete best-of SaaS operations suite — Command Center, global search, automations, notifications, CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, portfolio score, backup/restore, bilingual EN/RO interface, PWA support, and GitHub Pages-safe routing.
+> Complete best-of SaaS operations suite — workspace onboarding, industry-specific CRM configuration, team access roles, invite links, Command Center, global search, automations, notifications, CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, portfolio score, backup/restore, bilingual EN/RO interface, PWA support, and GitHub Pages-safe routing.
 
 ClientFlow PRO is a portfolio-ready operational dashboard that merges the strongest ideas from:
 
@@ -31,6 +31,11 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 
 ## Product highlights
 
+- **Workspace onboarding** from account creation with industry-specific CRM setup
+- **Industry templates** for Beauty, Mecanic auto, Kinetoterapeut, Psiholog and Custom CRM
+- **Team access management** with Admin, Angajat and Angajat nou roles
+- **Permission matrix** for view, add, edit, delete, manage permissions, validate client status and full access
+- **Admin invite links**: admin can create employee access and copy/send a ClientFlow PRO link
 - **Command Center** for priorities, open revenue, bookings, unread notifications and next-best-actions
 - **Global Search** across clients, tasks, invoices, services, bookings, demo plans and impact goals
 - **Automation Rules** with local run engine for overdue tasks, sent invoices, beauty reminders, VIP retention and high-value leads
@@ -47,16 +52,39 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 - **Functional Client Portal Preview** with simulated client-facing links and visible sections
 - **Functional Demo Planner** with readiness score, style templates, shot list and JSON export
 - **Functional Impact Goals** dashboard with progress bars and mission metrics
-- **Backup / Restore JSON** in Settings for full local workspace export/import, including suite modules, Beauty Studio bookings, automation rules and notifications
+- **Backup / Restore JSON** in Settings for full local workspace export/import, including suite modules, workspace configuration, roles, access links, Beauty Studio bookings, automation rules and notifications
 - **Case Study page** inside the app for product story, problem, solution, architecture and future direction
 - Bilingual EN/RO interface across core flows
-- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/command-center`, `/#/automations`, `/#/notifications`, `/#/suite`, `/#/beauty`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
+- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/workspace-setup`, `/#/command-center`, `/#/automations`, `/#/notifications`, `/#/suite`, `/#/beauty`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
 - React Query cache invalidation for a snappy local-first data layer
 - PWA-ready manifest, service worker registration and offline fallback
+
+## Workspace and access roles
+
+| Role | Access |
+| ---- | ------ |
+| Admin | Editează, modifică, șterge, adaugă permisiuni, gestionează accesul și are acces total |
+| Angajat | Vizualizează, adaugă și validează status client |
+| Angajat nou | View only |
+
+Adminul poate crea un profil de acces cu nume, email, rol și permisiuni custom, apoi poate copia linkul `/#/accept-access/:accessId` pentru angajat.
+
+## Industry CRM templates
+
+| Industry | CRM focus |
+| -------- | --------- |
+| Beauty / Salon | Programări, servicii, stiliști, retenție VIP |
+| Mecanic auto | Diagnoză, deviz, intervenție, predare mașină |
+| Kinetoterapeut | Evaluare, plan tratament, ședințe, reevaluare |
+| Psiholog | Intake, ședințe, consimțământ, follow-up |
+| Personalizat | Câmpuri, statusuri și etichete CRM configurabile |
 
 ## What this version includes
 
 - Demo login with one-click access and local session state
+- Account creation with domain-specific workspace setup
+- Workspace Access page with CRM profile editing, custom fields, custom statuses and team invitations
+- Accept Access route for invite links
 - First-run interactive demo tour with guided navigation through Dashboard, Clients, Tasks and Reports
 - Toast notification system with success/info states, dismiss actions and undo support
 - Command Center page with operational KPIs and next actions
@@ -88,6 +116,7 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 
 | Area | Included demo content |
 | ---- | --------------------- |
+| Workspace | Industry template, custom CRM labels, statuses, fields and team access profiles |
 | Clients | Active, lead and inactive accounts with tags, pipeline stages, health scores and custom fields |
 | Tasks | Todo, in-progress and done tasks with priorities, due dates, recurrence, subtasks and comments |
 | Invoices | Draft, sent and paid invoices with printable layout |
@@ -102,16 +131,6 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 | Backup | JSON export/import for core workspace and all suite modules |
 | Reset | Sidebar action that restores demo clients, tasks and notes |
 
-## Best-of roadmap imported into ClientFlow PRO
-
-| Source project | Strongest idea brought into ClientFlow PRO |
-| -------------- | ------------------------------------------ |
-| Alpis Fusion CRM Premium | AI assistant, premium UX, backup/restore, case study, product vision |
-| ClientFlow SaaS CRM Task Manager Automation Suite | Automation flow, invoicing, service templates, time tracking, client portal |
-| ALPIS ImpactPath | Mission, progress, roadmap and impact framing |
-| Link Video Editor Studio | Demo readiness score, style templates, JSON export and demo-story planning |
-| Beautyus Premium App | Booking widget, salon agenda, premium service experience, retention automations and revenue visibility |
-
 ## Cost model
 
 Required monthly cost: **€0**
@@ -121,24 +140,11 @@ Required monthly cost: **€0**
 - Paid API: not required
 - Hosting: GitHub Pages
 
-## Architecture
-
-```txt
-src/
-  auth/
-  components/
-  data/
-  features/
-  lib/
-  pages/
-  routes/
-  types/
-```
-
 ## Engineering highlights
 
-- TypeScript data models for clients, custom fields, tasks, subtasks, comments, recurrence, suite modules, automations and notifications
+- TypeScript data models for clients, custom fields, tasks, subtasks, comments, recurrence, suite modules, automations, notifications, workspace profiles and team access roles
 - Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
+- Workspace access model through `src/lib/workspaceAccess.ts`
 - Suite module storage through `src/lib/suiteStorage.ts`
 - Automation rule engine through `src/lib/automationEngine.ts`
 - Unified search helper through `src/lib/globalSearch.ts`
@@ -151,13 +157,6 @@ src/
 - Separate premium UI stylesheets for advanced workspace and suite modules
 - GitHub Actions CI for typecheck and production build
 
-## Getting started
-
-```bash
-npm install
-npm run dev
-```
-
 ## Quality checks
 
 ```bash
@@ -165,31 +164,11 @@ npm run typecheck
 npm run build
 ```
 
-## Repo description
-
-Mobile-first bilingual CRM & operations suite built with React, TypeScript, PWA support, Command Center, global search, automation rules, notifications center, AI Copilot, invoicing, service templates, time tracking, client portal preview, beauty booking studio, demo planner, impact goals, portfolio score, best-of product suite, advanced client pipeline, Kanban, analytics, onboarding tour, backup/restore, resettable demo data and local-first storage.
-
-## Repo topics
-
-`react` `typescript` `vite` `crm` `dashboard` `kanban` `pwa` `portfolio-project` `localstorage` `mobile-first` `ai-copilot` `bilingual` `product-suite` `booking-system` `automation`
-
 ## Trade-offs
 
 - Kept the app local-first to avoid cost and deployment complexity
+- Access links and permissions are local simulations, not secure production auth yet
 - AI Copilot and automations are deterministic and local, not backed by paid APIs
 - Client portal links are simulated previews, not public secure links
 - Beauty Studio automations are local workflow states, not real SMS/email notifications
 - PDF export uses the browser print flow instead of a paid document service
-- Service worker is intentionally simple and portfolio-friendly
-
-## Future upgrades
-
-- Real scheduled automation runner with background jobs
-- Real public client portal with secure links
-- Invoice duplicate detection and branded invoice templates
-- Demo planner markdown export and Playwright runner export
-- Impact dashboard with milestone timeline
-- Beauty Studio SMS/email reminders and room/team capacity planning
-- Real auth and sync with Supabase free tier
-- Multi-user collaboration
-- Persistent server-side audit trail
