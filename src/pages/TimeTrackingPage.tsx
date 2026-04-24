@@ -1,6 +1,7 @@
 import { FormEvent, useMemo, useState } from 'react'
 import { addSuiteItem, readSuiteCollection, type TimeEntry } from '../lib/suiteStorage'
 import { useLanguage } from '../lib/i18n'
+import { can, getWorkspaceProfile } from '../lib/workspaceAccess'
 
 function today() {
   return new Date().toISOString().slice(0, 10)
@@ -9,6 +10,10 @@ function today() {
 export function TimeTrackingPage() {
   const { language } = useLanguage()
   const ro = language === 'RO'
+  const workspace = getWorkspaceProfile()
+  const clientNoun = workspace?.clientLabel ?? (ro ? 'Client' : 'Client')
+  const serviceNoun = workspace?.serviceLabel ?? (ro ? 'Task' : 'Task')
+  const canAdd = can('add')
   const [entries, setEntries] = useState<TimeEntry[]>(() => readSuiteCollection('time'))
   const [client, setClient] = useState('')
   const [task, setTask] = useState('')
@@ -19,6 +24,7 @@ export function TimeTrackingPage() {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    if (!canAdd) return
     addSuiteItem('time', { client, task, hours: Number(hours) || 0, date })
     setEntries(readSuiteCollection('time'))
     setClient('')
@@ -31,11 +37,13 @@ export function TimeTrackingPage() {
     <div className="grid">
       <div className="page-header">
         <div>
-          <p className="eyebrow">{ro ? 'Time tracking' : 'Time tracking'}</p>
+          <p className="eyebrow">{workspace?.customIndustry ?? workspace?.industry ?? 'Time tracking'}</p>
           <h1 className="page-title">{ro ? 'Ore lucrate și estimare billable' : 'Worked hours and billable estimate'}</h1>
-          <p className="muted">{ro ? 'Log local pentru ore pe client și task, pregătit pentru facturare.' : 'Local log for hours by client and task, ready to connect to invoicing.'}</p>
+          <p className="muted">{workspace ? `Log local pentru ${clientNoun} și ${serviceNoun}.` : ro ? 'Log local pentru ore pe client și task, pregătit pentru facturare.' : 'Local log for hours by client and task, ready to connect to invoicing.'}</p>
         </div>
       </div>
+
+      {!canAdd ? <section className="card card-pad"><strong>View-only access</strong><p className="small muted" style={{ marginBottom: 0 }}>Logarea timpului este dezactivată pentru rolul curent.</p></section> : null}
 
       <section className="grid stats">
         <div className="card card-pad stat-card"><div className="small muted">{ro ? 'Intrări' : 'Entries'}</div><div className="stat-value">{entries.length}</div><div className="stat-change">local log</div></div>
@@ -60,11 +68,11 @@ export function TimeTrackingPage() {
         <aside className="card card-pad">
           <h2>{ro ? 'Adaugă timp' : 'Add time'}</h2>
           <form className="form-grid" onSubmit={handleSubmit}>
-            <input className="input" placeholder={ro ? 'Client' : 'Client'} value={client} onChange={(e) => setClient(e.target.value)} required />
-            <input className="input" placeholder={ro ? 'Task' : 'Task'} value={task} onChange={(e) => setTask(e.target.value)} required />
-            <input className="input" type="number" step="0.25" value={hours} onChange={(e) => setHours(e.target.value)} />
-            <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-            <button className="button">{ro ? 'Salvează ore' : 'Save hours'}</button>
+            <input className="input" placeholder={clientNoun} value={client} onChange={(e) => setClient(e.target.value)} required disabled={!canAdd} />
+            <input className="input" placeholder={serviceNoun} value={task} onChange={(e) => setTask(e.target.value)} required disabled={!canAdd} />
+            <input className="input" type="number" step="0.25" value={hours} onChange={(e) => setHours(e.target.value)} disabled={!canAdd} />
+            <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} disabled={!canAdd} />
+            <button className="button" disabled={!canAdd}>{ro ? 'Salvează ore' : 'Save hours'}</button>
           </form>
         </aside>
       </section>
