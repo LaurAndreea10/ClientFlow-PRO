@@ -25,7 +25,9 @@ All changes in demo mode are saved locally in your browser — refresh freely, n
 
 - Demo login with one-click access and local session state
 - Dashboard with KPI cards, workload widgets, revenue target and client status chart
-- Clients CRUD with search, profile details and local notes timeline
+- Advanced Clients workspace with pipeline view, table view, search, filters, pinned accounts, archive/restore and tags
+- Client health score, pipeline stages, last-contact tracking and custom CRM fields
+- Client detail pages with account controls, linked tasks, custom fields and local notes timeline
 - Advanced Tasks workspace with Kanban columns, status changes, archive/restore, saved views and sticky filters
 - Recurring tasks, tags, subtasks with progress, and task comments
 - Reports page with analytics charts, CSV export, JSON export and print/PDF-ready output
@@ -69,7 +71,7 @@ src/
 
 ## Engineering highlights
 
-- TypeScript data models for clients, tasks, subtasks, comments and recurrence
+- TypeScript data models for clients, custom fields, tasks, subtasks, comments and recurrence
 - Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
 - Route protection with local auth session
 - React Query for async state management and cache invalidation
@@ -92,7 +94,7 @@ npm run build
 
 ## Repo description
 
-Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, advanced Kanban, recurring tasks, subtasks, comments, analytics, import/export, command palette and local-first storage.
+Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, advanced client pipeline, health score, custom fields, Kanban, recurring tasks, subtasks, comments, analytics, command palette and local-first storage.
 
 ## Repo topics
 
@@ -101,7 +103,7 @@ Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support,
 ## Trade-offs
 
 - Kept the app local-first to avoid cost and deployment complexity
-- Task comments, recurrence and notifications are local mock features, not server-backed collaboration
+- Client health score, task comments, recurrence and notifications are local mock features, not server-backed collaboration
 - PDF export uses the browser print flow instead of a paid document service
 - Service worker is intentionally simple and portfolio-friendly
 
