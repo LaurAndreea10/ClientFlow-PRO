@@ -6,13 +6,27 @@ const links = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/clients', label: 'Clients' },
   { to: '/tasks', label: 'Tasks' },
+  { to: '/reports', label: 'Reports' },
+  { to: '/calendar', label: 'Calendar' },
+  { to: '/activity', label: 'Activity' },
+  { to: '/settings', label: 'Settings' },
 ]
 
 const titles: Record<string, string> = {
   '/dashboard': 'Portfolio dashboard',
   '/clients': 'Client relationships',
   '/tasks': 'Delivery workflow',
+  '/reports': 'Reports and analytics',
+  '/calendar': 'Calendar timeline',
+  '/activity': 'Activity log',
+  '/settings': 'Workspace settings',
 }
+
+const shortcuts = [
+  { label: '⌘K Search', hint: 'Command palette mock' },
+  { label: 'N New task', hint: 'Keyboard shortcut' },
+  { label: 'G then D', hint: 'Go to dashboard' },
+]
 
 export function AppLayout() {
   const navigate = useNavigate()
@@ -31,10 +45,10 @@ export function AppLayout() {
           <span>ClientFlow Pro</span>
         </Link>
         <p className="muted small" style={{ marginTop: 10 }}>
-          SaaS-style CRM starter with local-first storage and zero required paid services.
+          SaaS-style CRM starter with local-first storage, analytics, calendar, activity log and settings.
         </p>
 
-        <nav className="nav">
+        <nav className="nav" aria-label="Main navigation">
           {links.map((link) => (
             <NavLink
               key={link.to}
@@ -46,6 +60,19 @@ export function AppLayout() {
             </NavLink>
           ))}
         </nav>
+
+        <div className="sidebar-panel">
+          <div className="small muted">Command center</div>
+          <div style={{ marginTop: 8, fontWeight: 700 }}>Portfolio UX polish</div>
+          <div className="list" style={{ marginTop: 12 }}>
+            {shortcuts.map((shortcut) => (
+              <div className="mini-item" key={shortcut.label}>
+                <strong>{shortcut.label}</strong>
+                <div className="small muted">{shortcut.hint}</div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         <div className="sidebar-panel">
           <div className="small muted">Free-first mode</div>
@@ -70,6 +97,7 @@ export function AppLayout() {
           </div>
           <div className="topbar-actions">
             <DemoBadge />
+            <Link className="button secondary" to="/tasks">Quick add</Link>
           </div>
         </div>
         <Outlet />
