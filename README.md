@@ -8,6 +8,16 @@
 
 > Multi-industry CRM and operations suite with public landing, guided demo, role-based access, automations, bookings, invoices, local-first storage and Supabase-ready architecture.
 
+## Recruiter quick review
+
+- **Live demo:** [laurandreea10.github.io/ClientFlow-PRO](https://laurandreea10.github.io/ClientFlow-PRO/#/)
+- **Demo login:** `demo@clientflow.pro` / `demo1234`
+- **Best route:** Start Here → Command Center → Automations → Portfolio Score
+- **Tech:** React, TypeScript, Vite, React Query
+- **Status:** portfolio demo, local-first, Supabase-ready
+
+> **Demo note:** data is stored in your browser with `localStorage`. Access links and portal links are simulated for portfolio review; production security would use backend auth and Supabase Row Level Security.
+
 ## 🚀 Live Demo
 
 **→ [Open the landing page](https://laurandreea10.github.io/ClientFlow-PRO/#/)**  
