@@ -3,20 +3,18 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { archiveClient, createClient, getClients, restoreClient, toggleClientPinned, updateClient } from '../lib/mockApi'
 import { useToast } from '../components/ToastProvider'
+import { useLanguage } from '../lib/i18n'
+import { getPageCopy } from '../lib/pageCopy'
 import type { ClientStage, ClientStatus } from '../types'
 
-const stages: { id: ClientStage; label: string }[] = [
-  { id: 'new', label: 'New' },
-  { id: 'qualified', label: 'Qualified' },
-  { id: 'proposal', label: 'Proposal' },
-  { id: 'negotiation', label: 'Negotiation' },
-  { id: 'won', label: 'Won' },
-  { id: 'paused', label: 'Paused' },
-]
+const stageIds: ClientStage[] = ['new', 'qualified', 'proposal', 'negotiation', 'won', 'paused']
 
 export function ClientsPage() {
   const queryClient = useQueryClient()
   const { pushToast, pushUndoToast } = useToast()
+  const { language } = useLanguage()
+  const t = getPageCopy(language).clients
+  const stages = stageIds.map((id) => ({ id, label: t.stageLabels[id] }))
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<ClientStatus | 'all'>('all')
   const [showArchived, setShowArchived] = useState(false)
@@ -41,7 +39,7 @@ export function ClientsPage() {
     mutationFn: createClient,
     onSuccess: (client) => {
       refresh()
-      pushToast({ title: 'Client created', message: `${client.name} was added to the pipeline.`, tone: 'success' })
+      pushToast({ title: t.clientCreated, message: `${client.name} ${t.addedToPipeline}`, tone: 'success' })
       setName('')
       setCompany('')
       setEmail('')
@@ -57,28 +55,28 @@ export function ClientsPage() {
     mutationFn: ({ id, nextStage }: { id: string; nextStage: ClientStage }) => updateClient(id, { stage: nextStage }),
     onSuccess: (client) => {
       refresh()
-      pushToast({ title: 'Pipeline updated', message: `${client.name} moved to ${client.stage}.`, tone: 'success' })
+      pushToast({ title: t.pipelineUpdated, message: `${client.name} ${t.movedTo} ${client.stage ? t.stageLabels[client.stage] : ''}.`, tone: 'success' })
     },
   })
   const pinMutation = useMutation({
     mutationFn: toggleClientPinned,
     onSuccess: (client) => {
       refresh()
-      pushToast({ title: client.pinned ? 'Client pinned' : 'Client unpinned', message: client.name, tone: 'success' })
+      pushToast({ title: client.pinned ? t.clientPinned : t.clientUnpinned, message: client.name, tone: 'success' })
     },
   })
   const archiveMutation = useMutation({
     mutationFn: archiveClient,
     onSuccess: (client) => {
       refresh()
-      pushUndoToast('Client archived', `${client.name} moved out of active pipeline.`, () => restoreMutation.mutate(client.id))
+      pushUndoToast(t.clientArchived, `${client.name} ${t.movedOut}`, () => restoreMutation.mutate(client.id))
     },
   })
   const restoreMutation = useMutation({
     mutationFn: restoreClient,
     onSuccess: (client) => {
       refresh()
-      pushToast({ title: 'Client restored', message: `${client.name} is active again.`, tone: 'success' })
+      pushToast({ title: t.clientRestored, message: `${client.name} ${t.activeAgain}`, tone: 'success' })
     },
   })
 
@@ -117,34 +115,34 @@ export function ClientsPage() {
     <div className="grid">
       <div className="page-header">
         <div>
-          <p className="eyebrow">Client management</p>
-          <h1 className="page-title">Clients</h1>
-          <p className="muted">Pipeline, health score, pinned accounts, tags, archive and custom CRM fields.</p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1 className="page-title">{t.title}</h1>
+          <p className="muted">{t.description}</p>
         </div>
         <div className="toolbar">
-          <button className={`button ${view === 'pipeline' ? '' : 'secondary'}`} onClick={() => setView('pipeline')} type="button">Pipeline</button>
-          <button className={`button ${view === 'table' ? '' : 'secondary'}`} onClick={() => setView('table')} type="button">Table</button>
+          <button className={`button ${view === 'pipeline' ? '' : 'secondary'}`} onClick={() => setView('pipeline')} type="button">{t.pipeline}</button>
+          <button className={`button ${view === 'table' ? '' : 'secondary'}`} onClick={() => setView('table')} type="button">{t.table}</button>
         </div>
       </div>
 
       <section className="grid stats">
-        <div className="card card-pad stat-card"><div className="small muted">Visible pipeline</div><div className="stat-value">{filtered.length}</div><div className="stat-change">Filtered accounts</div></div>
-        <div className="card card-pad stat-card"><div className="small muted">Pinned</div><div className="stat-value">{pinnedClients.length}</div><div className="stat-change">Priority clients</div></div>
-        <div className="card card-pad stat-card"><div className="small muted">Avg health</div><div className="stat-value">{avgHealth}</div><div className="stat-change">Active accounts</div></div>
-        <div className="card card-pad stat-card"><div className="small muted">Pipeline value</div><div className="stat-value">€{pipelineValue}</div><div className="stat-change">Monthly retainers</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.visiblePipeline}</div><div className="stat-value">{filtered.length}</div><div className="stat-change">{t.filteredAccounts}</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.pinned}</div><div className="stat-value">{pinnedClients.length}</div><div className="stat-change">{t.priorityClients}</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.avgHealth}</div><div className="stat-value">{avgHealth}</div><div className="stat-change">{t.activeAccounts}</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.pipelineValue}</div><div className="stat-value">€{pipelineValue}</div><div className="stat-change">{t.monthlyRetainers}</div></div>
       </section>
 
       <section className="card card-pad sticky-filter-card">
         <div className="toolbar">
-          <input className="input" style={{ maxWidth: 380 }} placeholder="Search clients, tags, companies..." value={search} onChange={(event) => setSearch(event.target.value)} />
+          <input className="input" style={{ maxWidth: 380 }} placeholder={t.searchPlaceholder} value={search} onChange={(event) => setSearch(event.target.value)} />
           <select className="select" style={{ maxWidth: 180 }} value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as ClientStatus | 'all')}>
-            <option value="all">All status</option>
-            <option value="lead">Lead</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="all">{t.allStatus}</option>
+            <option value="lead">{t.lead}</option>
+            <option value="active">{t.active}</option>
+            <option value="inactive">{t.inactive}</option>
           </select>
           <button className={`button ${showArchived ? '' : 'secondary'}`} onClick={() => setShowArchived((current) => !current)} type="button">
-            {showArchived ? 'Showing archived' : 'Active only'}
+            {showArchived ? t.showingArchived : t.activeOnly}
           </button>
         </div>
       </section>
@@ -153,10 +151,10 @@ export function ClientsPage() {
         <section className="card card-pad">
           <div className="card-title-row">
             <div>
-              <h2 style={{ margin: 0 }}>{view === 'pipeline' ? 'Lead pipeline' : 'Client table'}</h2>
-              <div className="small muted">Move clients through stages or inspect them in table mode.</div>
+              <h2 style={{ margin: 0 }}>{view === 'pipeline' ? t.leadPipeline : t.clientTable}</h2>
+              <div className="small muted">{t.modeHint}</div>
             </div>
-            <div className="pill">{filtered.length} visible</div>
+            <div className="pill">{filtered.length} {t.visible}</div>
           </div>
 
           {view === 'pipeline' ? (
@@ -168,7 +166,7 @@ export function ClientsPage() {
                     <div className="card-title-row">
                       <div>
                         <strong>{item.label}</strong>
-                        <div className="small muted">{stageClients.length} clients</div>
+                        <div className="small muted">{stageClients.length} {t.clients}</div>
                       </div>
                     </div>
                     <div className="list">
@@ -179,17 +177,17 @@ export function ClientsPage() {
                               <Link to={`/clients/${client.id}`}><strong>{client.name}</strong></Link>
                               <div className="small muted">{client.company}</div>
                             </div>
-                            <button className="icon-button" onClick={() => pinMutation.mutate(client.id)} type="button" aria-label="Pin client">
+                            <button className="icon-button" onClick={() => pinMutation.mutate(client.id)} type="button" aria-label={t.pin}>
                               {client.pinned ? '★' : '☆'}
                             </button>
                           </div>
                           <div className="health-row">
-                            <span>Health</span>
+                            <span>{t.health}</span>
                             <strong>{client.healthScore ?? 0}</strong>
                           </div>
                           <div className="health-bar"><span style={{ width: `${client.healthScore ?? 0}%` }} /></div>
                           <div className="task-meta-row">
-                            <span className={`badge ${client.status}`}>{client.status}</span>
+                            <span className={`badge ${client.status}`}>{client.status === 'active' ? t.active : client.status === 'inactive' ? t.inactive : t.lead}</span>
                             <span className="badge">€{client.monthlyValue}</span>
                             {(client.tags ?? []).map((tag) => <span className="badge" key={tag}>{tag}</span>)}
                           </div>
@@ -197,13 +195,13 @@ export function ClientsPage() {
                             {stages.map((stageOption) => <option key={stageOption.id} value={stageOption.id}>{stageOption.label}</option>)}
                           </select>
                           {client.archived ? (
-                            <button className="button" onClick={() => restoreMutation.mutate(client.id)} type="button">Restore</button>
+                            <button className="button" onClick={() => restoreMutation.mutate(client.id)} type="button">{t.restore}</button>
                           ) : (
-                            <button className="button secondary" onClick={() => archiveMutation.mutate(client.id)} type="button">Archive</button>
+                            <button className="button secondary" onClick={() => archiveMutation.mutate(client.id)} type="button">{t.archive}</button>
                           )}
                         </article>
                       ))}
-                      {stageClients.length === 0 ? <div className="empty-state">No clients.</div> : null}
+                      {stageClients.length === 0 ? <div className="empty-state">{t.noClients}</div> : null}
                     </div>
                   </div>
                 )
@@ -212,20 +210,20 @@ export function ClientsPage() {
           ) : (
             <div className="table-wrap">
               <table className="table">
-                <thead><tr><th>Name</th><th>Company</th><th>Status</th><th>Stage</th><th>Health</th><th>Monthly</th><th /></tr></thead>
+                <thead><tr><th>{t.name}</th><th>{t.company}</th><th>{t.status}</th><th>{t.stage}</th><th>{t.health}</th><th>{t.monthly}</th><th /></tr></thead>
                 <tbody>
                   {filtered.map((client) => (
                     <tr key={client.id}>
                       <td><Link to={`/clients/${client.id}`}><strong>{client.pinned ? '★ ' : ''}{client.name}</strong></Link><div className="small muted">{client.email}</div></td>
                       <td>{client.company}</td>
-                      <td><span className={`badge ${client.status}`}>{client.status}</span></td>
-                      <td>{client.stage}</td>
+                      <td><span className={`badge ${client.status}`}>{client.status === 'active' ? t.active : client.status === 'inactive' ? t.inactive : t.lead}</span></td>
+                      <td>{client.stage ? t.stageLabels[client.stage] : ''}</td>
                       <td>{client.healthScore}</td>
                       <td>€{client.monthlyValue}</td>
-                      <td><button className="button secondary" onClick={() => pinMutation.mutate(client.id)}>{client.pinned ? 'Unpin' : 'Pin'}</button></td>
+                      <td><button className="button secondary" onClick={() => pinMutation.mutate(client.id)}>{client.pinned ? t.unpin : t.pin}</button></td>
                     </tr>
                   ))}
-                  {filtered.length === 0 ? <tr><td colSpan={7}><div className="empty-state">No clients found.</div></td></tr> : null}
+                  {filtered.length === 0 ? <tr><td colSpan={7}><div className="empty-state">{t.noClientsFound}</div></td></tr> : null}
                 </tbody>
               </table>
             </div>
@@ -235,24 +233,24 @@ export function ClientsPage() {
         <aside className="card card-pad sticky-action-panel">
           <div className="card-title-row">
             <div>
-              <h2 style={{ margin: 0 }}>Add client</h2>
-              <div className="small muted">Create a tagged account with stage and status.</div>
+              <h2 style={{ margin: 0 }}>{t.addClient}</h2>
+              <div className="small muted">{t.addClientHint}</div>
             </div>
           </div>
           <form className="form-grid" onSubmit={handleSubmit}>
-            <input className="input" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-            <input className="input" placeholder="Company" value={company} onChange={(e) => setCompany(e.target.value)} required />
+            <input className="input" placeholder={t.name} value={name} onChange={(e) => setName(e.target.value)} required />
+            <input className="input" placeholder={t.company} value={company} onChange={(e) => setCompany(e.target.value)} required />
             <input className="input" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <input className="input" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <input className="input" placeholder={t.phone} value={phone} onChange={(e) => setPhone(e.target.value)} />
             <select className="select" value={status} onChange={(e) => setStatus(e.target.value as ClientStatus)}>
-              <option value="lead">lead</option><option value="active">active</option><option value="inactive">inactive</option>
+              <option value="lead">{t.lead}</option><option value="active">{t.active}</option><option value="inactive">{t.inactive}</option>
             </select>
             <select className="select" value={stage} onChange={(e) => setStage(e.target.value as ClientStage)}>
               {stages.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
             </select>
-            <input className="input" placeholder="Monthly value" value={monthlyValue} onChange={(e) => setMonthlyValue(e.target.value)} />
-            <input className="input" placeholder="Tags, comma separated" value={tags} onChange={(e) => setTags(e.target.value)} />
-            <button className="button" disabled={createMutation.isPending}>{createMutation.isPending ? 'Saving...' : 'Save client'}</button>
+            <input className="input" placeholder={t.monthlyValue} value={monthlyValue} onChange={(e) => setMonthlyValue(e.target.value)} />
+            <input className="input" placeholder={t.tagsPlaceholder} value={tags} onChange={(e) => setTags(e.target.value)} />
+            <button className="button" disabled={createMutation.isPending}>{createMutation.isPending ? t.saving : t.saveClient}</button>
           </form>
         </aside>
       </div>
