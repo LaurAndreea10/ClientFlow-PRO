@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { downloadWorkspaceBackup, restoreWorkspaceBackup } from '../lib/backup'
 import { notifyPreferencesChanged, PREFERENCES_KEY, useLanguage } from '../lib/i18n'
+import { can } from '../lib/workspaceAccess'
 
 type Preferences = {
   language: 'EN' | 'RO'
@@ -32,6 +33,8 @@ function readPreferences(): Preferences {
 export function SettingsPage() {
   const { language, copy } = useLanguage()
   const t = copy.settings
+  const canEditSettings = can('edit') || can('managePermissions')
+  const canRestore = can('fullAccess') || can('managePermissions')
   const [preferences, setPreferences] = useState<Preferences>(() => readPreferences())
   const [saved, setSaved] = useState(false)
   const [restoreMessage, setRestoreMessage] = useState('')
@@ -45,12 +48,13 @@ export function SettingsPage() {
   }, [preferences])
 
   function updatePreference<Key extends keyof Preferences>(key: Key, value: Preferences[Key]) {
+    if (!canEditSettings) return
     setPreferences((current) => ({ ...current, [key]: value }))
   }
 
   async function handleRestore(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    if (!file) return
+    if (!file || !canRestore) return
 
     try {
       const backup = await restoreWorkspaceBackup(file)
@@ -74,6 +78,8 @@ export function SettingsPage() {
         </div>
         <div className="pill">{saved ? t.autosaved : t.localPreferences}</div>
       </div>
+
+      {!canEditSettings || !canRestore ? <section className="card card-pad"><strong>Access mode</strong><p className="small muted" style={{ marginBottom: 0 }}>Settings edit: {canEditSettings ? 'enabled' : 'disabled'} · Restore backup: {canRestore ? 'enabled' : 'disabled'}</p></section> : null}
 
       <section className="two-col">
         <div className="card card-pad">
@@ -108,20 +114,20 @@ export function SettingsPage() {
           </div>
           <div className="form-grid">
             <label className="small muted">{t.language}</label>
-            <select className="select" value={preferences.language} onChange={(event) => updatePreference('language', event.target.value as Preferences['language'])}>
+            <select className="select" value={preferences.language} disabled={!canEditSettings} onChange={(event) => updatePreference('language', event.target.value as Preferences['language'])}>
               <option value="EN">English</option>
               <option value="RO">Română</option>
             </select>
 
             <label className="small muted">{t.theme}</label>
-            <select className="select" value={preferences.theme} onChange={(event) => updatePreference('theme', event.target.value as Preferences['theme'])}>
+            <select className="select" value={preferences.theme} disabled={!canEditSettings} onChange={(event) => updatePreference('theme', event.target.value as Preferences['theme'])}>
               <option value="System">{t.system}</option>
               <option value="Dark">{t.dark}</option>
               <option value="Light">{t.light}</option>
             </select>
 
             <label className="small muted">{t.density}</label>
-            <select className="select" value={preferences.density} onChange={(event) => updatePreference('density', event.target.value as Preferences['density'])}>
+            <select className="select" value={preferences.density} disabled={!canEditSettings} onChange={(event) => updatePreference('density', event.target.value as Preferences['density'])}>
               <option value="Comfortable">{t.comfortable}</option>
               <option value="Compact">{t.compact}</option>
             </select>
@@ -145,9 +151,9 @@ export function SettingsPage() {
           <button className="button" type="button" onClick={downloadWorkspaceBackup}>
             {language === 'RO' ? 'Descarcă backup JSON' : 'Download JSON backup'}
           </button>
-          <label className="button secondary" style={{ cursor: 'pointer' }}>
+          <label className={`button secondary ${!canRestore ? 'disabled' : ''}`} style={{ cursor: canRestore ? 'pointer' : 'not-allowed', opacity: canRestore ? 1 : 0.5 }}>
             {language === 'RO' ? 'Restaurează backup' : 'Restore backup'}
-            <input type="file" accept="application/json" onChange={handleRestore} style={{ display: 'none' }} />
+            <input type="file" accept="application/json" disabled={!canRestore} onChange={handleRestore} style={{ display: 'none' }} />
           </label>
         </div>
         {restoreMessage ? <div className="small muted" style={{ marginTop: 12 }}>{restoreMessage}</div> : null}
@@ -162,25 +168,16 @@ export function SettingsPage() {
         </div>
         <div className="settings-grid">
           <label className="setting-toggle">
-            <span>
-              <strong>{t.reducedMotion}</strong>
-              <span className="small muted">{t.reducedMotionHint}</span>
-            </span>
-            <input type="checkbox" checked={preferences.reducedMotion} onChange={(event) => updatePreference('reducedMotion', event.target.checked)} />
+            <span><strong>{t.reducedMotion}</strong><span className="small muted">{t.reducedMotionHint}</span></span>
+            <input type="checkbox" checked={preferences.reducedMotion} disabled={!canEditSettings} onChange={(event) => updatePreference('reducedMotion', event.target.checked)} />
           </label>
           <label className="setting-toggle">
-            <span>
-              <strong>{t.draftAutosave}</strong>
-              <span className="small muted">{t.draftAutosaveHint}</span>
-            </span>
-            <input type="checkbox" checked={preferences.autosave} onChange={(event) => updatePreference('autosave', event.target.checked)} />
+            <span><strong>{t.draftAutosave}</strong><span className="small muted">{t.draftAutosaveHint}</span></span>
+            <input type="checkbox" checked={preferences.autosave} disabled={!canEditSettings} onChange={(event) => updatePreference('autosave', event.target.checked)} />
           </label>
           <label className="setting-toggle">
-            <span>
-              <strong>{t.notifications}</strong>
-              <span className="small muted">{t.notificationsHint}</span>
-            </span>
-            <input type="checkbox" checked={preferences.notifications} onChange={(event) => updatePreference('notifications', event.target.checked)} />
+            <span><strong>{t.notifications}</strong><span className="small muted">{t.notificationsHint}</span></span>
+            <input type="checkbox" checked={preferences.notifications} disabled={!canEditSettings} onChange={(event) => updatePreference('notifications', event.target.checked)} />
           </label>
         </div>
       </section>
