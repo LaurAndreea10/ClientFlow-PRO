@@ -1,7 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { login } from '../lib/mockApi'
-import { DEMO_CREDENTIALS, loginAsDemo } from '../auth/demoAuth'
+import { DEMO_CREDENTIALS } from '../auth/demoAuth'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -25,9 +25,18 @@ export function LoginPage() {
     }
   }
 
-  function handleDemo() {
-    loginAsDemo()
-    navigate('/dashboard')
+  async function handleDemo() {
+    setError('')
+    setLoading(true)
+
+    try {
+      await login(DEMO_CREDENTIALS.email, DEMO_CREDENTIALS.password)
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not start demo mode')
+    } finally {
+      setLoading(false)
+    }
   }
 
   function fillDemoCredentials() {
@@ -84,7 +93,7 @@ export function LoginPage() {
               <span className="pill" style={{ whiteSpace: 'nowrap' }}>No signup</span>
             </div>
 
-            <button className="button" type="button" onClick={handleDemo} style={{ width: '100%', marginTop: 16 }}>
+            <button className="button" type="button" onClick={handleDemo} disabled={loading} style={{ width: '100%', marginTop: 16 }}>
               Try Demo →
             </button>
 
