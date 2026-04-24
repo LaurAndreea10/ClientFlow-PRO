@@ -192,6 +192,101 @@
   gap: 3px;
 }
 
+.tasks-layout {
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: start;
+}
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(280px, 1fr));
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.kanban-column {
+  min-width: 280px;
+  padding: 16px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.032);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.kanban-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 28px rgba(2, 8, 23, 0.22);
+}
+
+.kanban-card.archived {
+  opacity: 0.62;
+  filter: grayscale(0.3);
+}
+
+.task-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.subtask-box,
+.comment-box {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(2, 8, 23, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.subtask-progress {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.subtask-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #8b5cf6, #22c55e);
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-2);
+}
+
+.subtask-item input {
+  accent-color: var(--accent);
+}
+
+.inline-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.sticky-filter-card {
+  position: sticky;
+  top: 12px;
+  z-index: 15;
+  backdrop-filter: blur(18px);
+}
+
+.sticky-action-panel {
+  position: sticky;
+  top: 12px;
+}
+
 @media (max-width: 1100px) {
   .settings-grid {
     grid-template-columns: 1fr;
@@ -200,16 +295,34 @@
   .calendar-grid {
     grid-template-columns: repeat(2, minmax(220px, 1fr));
   }
+
+  .tasks-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .kanban-board {
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+  }
+
+  .sticky-action-panel,
+  .sticky-filter-card {
+    position: static;
+  }
 }
 
 @media (max-width: 700px) {
-  .calendar-grid {
+  .calendar-grid,
+  .kanban-board {
     grid-template-columns: 1fr;
   }
 
   .topbar-actions {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .inline-form {
+    grid-template-columns: 1fr;
   }
 }
 
