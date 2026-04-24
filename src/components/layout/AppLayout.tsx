@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { CommandPalette } from '../CommandPalette'
 import { DemoBadge } from '../DemoBadge'
 import { DemoTour } from '../DemoTour'
+import { PwaStatus } from '../PwaStatus'
 import { logout } from '../../lib/mockApi'
 
 const links = [
@@ -52,11 +53,7 @@ export function AppLayout() {
 
         <nav className="nav" aria-label="Main navigation">
           {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
+            <NavLink key={link.to} to={link.to} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               <span>{link.label}</span>
               <span className="muted">→</span>
             </NavLink>
@@ -85,9 +82,7 @@ export function AppLayout() {
         </div>
 
         <div style={{ marginTop: 24 }}>
-          <button className="button secondary" onClick={handleLogout}>
-            Log out
-          </button>
+          <button className="button secondary" onClick={handleLogout}>Log out</button>
         </div>
       </aside>
 
@@ -98,6 +93,7 @@ export function AppLayout() {
             <h2 className="topbar-title">{titles[location.pathname] ?? 'Workspace'}</h2>
           </div>
           <div className="topbar-actions">
+            <PwaStatus />
             <CommandPalette />
             <DemoTour />
             <DemoBadge />
