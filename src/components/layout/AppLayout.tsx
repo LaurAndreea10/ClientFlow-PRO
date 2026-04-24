@@ -11,6 +11,7 @@ import { useLanguage, type Language } from '../../lib/i18n'
 import { logout, resetDemoWorkspace } from '../../lib/mockApi'
 
 const linkKeys = [
+  { to: '/workspace-setup', label: { EN: 'Workspace Access', RO: 'Accese workspace' } },
   { to: '/command-center', label: { EN: 'Command Center', RO: 'Command Center' } },
   { to: '/search', label: { EN: 'Search', RO: 'Căutare' } },
   { to: '/automations', label: { EN: 'Automations', RO: 'Automatizări' } },
@@ -36,6 +37,7 @@ const linkKeys = [
 
 const routeTitles: Record<Language, Record<string, string>> = {
   EN: {
+    '/workspace-setup': 'Workspace access and CRM setup',
     '/command-center': 'Command Center',
     '/search': 'Global search',
     '/automations': 'Automation rules',
@@ -59,6 +61,7 @@ const routeTitles: Record<Language, Record<string, string>> = {
     '/settings': 'Workspace settings',
   },
   RO: {
+    '/workspace-setup': 'Accese și configurare CRM',
     '/command-center': 'Command Center',
     '/search': 'Căutare globală',
     '/automations': 'Reguli de automatizare',
