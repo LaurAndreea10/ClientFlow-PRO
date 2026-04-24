@@ -14,6 +14,7 @@ import { DashboardPage } from './pages/DashboardPage'
 import { DemoPlannerPage } from './pages/DemoPlannerPage'
 import { ImpactGoalsPage } from './pages/ImpactGoalsPage'
 import { InvoicingPage } from './pages/InvoicingPage'
+import { LandingPage } from './pages/LandingPage'
 import { LoginPage } from './pages/LoginPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { NotificationsPage } from './pages/NotificationsPage'
@@ -34,6 +35,8 @@ import { ProtectedRoute } from './routes/ProtectedRoute'
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/portal-preview/:code" element={<PortalPreviewPage />} />
