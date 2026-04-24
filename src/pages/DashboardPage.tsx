@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { AiCopilotPanel } from '../components/AiCopilotPanel'
 import { MetricCard } from '../components/ui/MetricCard'
 import { useLanguage } from '../lib/i18n'
 import { getClients, getDashboardStats, getTasks } from '../lib/mockApi'
@@ -57,6 +58,8 @@ export function DashboardPage() {
           </div>
         </div>
       </section>
+
+      <AiCopilotPanel clients={clients} tasks={tasks} />
 
       <section className="grid stats">
         <MetricCard label={t.totalClients} value={stats?.totalClients ?? 0} hint={t.seededInstantly} />
