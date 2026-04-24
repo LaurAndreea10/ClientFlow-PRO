@@ -1,6 +1,6 @@
 # ClientFlow PRO
 
-> All-in-one SaaS business management dashboard — clients, tasks, reports, calendar, kanban, and settings.
+> All-in-one SaaS business management dashboard — clients, tasks, reports, calendar, kanban, activity log, command palette, and settings.
 
 A mobile-first CRM and workflow dashboard built with React, TypeScript, Vite, and local-first storage.
 
@@ -23,16 +23,19 @@ All changes in demo mode are saved locally in your browser — refresh freely, n
 
 ## What this version includes
 
-- Dashboard, Clients, Tasks, Reports, Calendar, Activity, Settings
-- Clients CRUD with favorites, archive, tags, notes template, duplicate, CSV import/export, bulk actions
-- Tasks CRUD with list + Kanban drag-and-drop, recurring tasks, subtasks, mock attachments, archive, duplicate, CSV import/export, bulk actions
-- Notes timeline per client
-- Search overlay / command style access, keyboard shortcuts, onboarding, toasts, notifications, undo delete
-- Reports with printable/PDF-ready export
-- Dark and light theme
-- English and Romanian toggle
+- Demo login with one-click access and local session state
+- Dashboard with KPI cards, workload widgets, revenue target and client status chart
+- Clients CRUD with search, profile details and local notes timeline
+- Advanced Tasks workspace with Kanban columns, status changes, archive/restore, saved views and sticky filters
+- Recurring tasks, tags, subtasks with progress, and task comments
+- Reports page with analytics charts, CSV export, JSON export and print/PDF-ready output
+- Calendar timeline with week/month views, due today, overdue and upcoming widgets
+- Activity log with local audit timeline and notification center mock
+- Settings page with demo profile, language preference, theme preference, density, reduced motion, autosave and notifications
+- Command palette with `Ctrl/Cmd + K` for pages, clients and tasks
+- HashRouter GitHub Pages routing for reliable `/#/login` and `/#/dashboard` deep links
 - PWA-ready manifest, service worker and offline fallback page
-- CI, issue templates, PR template, portfolio assets
+- CI workflow, issue templates, PR template and portfolio assets
 
 ## Cost model
 
@@ -41,7 +44,7 @@ Required monthly cost: **€0**
 - Storage: browser `localStorage`
 - Backend: not required
 - Paid API: not required
-- Hosting: optional
+- Hosting: GitHub Pages
 
 ## Screenshots and presentation assets
 
@@ -54,13 +57,24 @@ Required monthly cost: **€0**
 
 ```txt
 src/
+  auth/
   components/
   data/
   features/
   lib/
   pages/
   routes/
+  types/
 ```
+
+## Engineering highlights
+
+- TypeScript data models for clients, tasks, subtasks, comments and recurrence
+- Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
+- Route protection with local auth session
+- React Query for async state management and cache invalidation
+- Separate premium UI stylesheet for advanced workspace components
+- GitHub Actions CI for typecheck and production build
 
 ## Getting started
 
@@ -73,13 +87,12 @@ npm run dev
 
 ```bash
 npm run typecheck
-npm run test
 npm run build
 ```
 
 ## Repo description
 
-Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, recurring tasks, Kanban, analytics, import/export, and local-first storage.
+Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, advanced Kanban, recurring tasks, subtasks, comments, analytics, import/export, command palette and local-first storage.
 
 ## Repo topics
 
@@ -88,7 +101,7 @@ Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support,
 ## Trade-offs
 
 - Kept the app local-first to avoid cost and deployment complexity
-- Mock attachments stay metadata-only, not real cloud uploads
+- Task comments, recurrence and notifications are local mock features, not server-backed collaboration
 - PDF export uses the browser print flow instead of a paid document service
 - Service worker is intentionally simple and portfolio-friendly
 
@@ -98,3 +111,4 @@ Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support,
 - Multi-user collaboration
 - Real file uploads
 - Persistent server-side audit trail
+- Server-side recurring task automation
