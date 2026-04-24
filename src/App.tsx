@@ -12,6 +12,7 @@ import { ClientsPage } from './pages/ClientsPage'
 import { CommandCenterPage } from './pages/CommandCenterPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { DemoPlannerPage } from './pages/DemoPlannerPage'
+import { DemoScriptPage } from './pages/DemoScriptPage'
 import { ImpactGoalsPage } from './pages/ImpactGoalsPage'
 import { InvoicingPage } from './pages/InvoicingPage'
 import { LandingPage } from './pages/LandingPage'
@@ -46,6 +47,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route index element={<Navigate to="/start-here" replace />} />
           <Route path="/start-here" element={<StartHerePage />} />
+          <Route path="/demo-script" element={<DemoScriptPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/workspace-setup" element={<WorkspaceSetupPage />} />
           <Route path="/command-center" element={<CommandCenterPage />} />
