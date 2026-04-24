@@ -67,6 +67,24 @@ export type BeautyBooking = {
   retentionLabel: 'New' | 'Returning' | 'VIP' | 'At risk'
 }
 
+export type AutomationRule = {
+  id: string
+  name: string
+  trigger: 'overdue-task' | 'invoice-sent' | 'beauty-booking-tomorrow' | 'vip-inactive' | 'high-value-lead'
+  action: string
+  enabled: boolean
+  lastRunAt?: string
+}
+
+export type NotificationItem = {
+  id: string
+  title: string
+  message: string
+  type: 'task' | 'invoice' | 'booking' | 'client' | 'system'
+  read: boolean
+  createdAt: string
+}
+
 const seeds = {
   invoices: [
     { id: 'inv-1', client: 'Bloom Studio', service: 'Growth Retainer', amount: 1800, status: 'sent', dueDate: '2026-05-05', createdAt: '2026-04-20' },
@@ -100,6 +118,18 @@ const seeds = {
     { id: 'beauty-2', client: 'Sofia Marin', email: 'sofia@beauty.demo', phone: '+40 700 810 101', service: 'Nails Signature', stylist: 'Daria', date: '2026-05-03', time: '12:30', status: 'pending', spend: 85, notes: 'Confirm design before appointment.', retentionLabel: 'Returning' },
     { id: 'beauty-3', client: 'Ana Ionescu', email: 'ana@beauty.demo', phone: '+40 700 810 102', service: 'Facial Treatment', stylist: 'Mara', date: '2026-05-04', time: '15:00', status: 'vip-follow-up', spend: 160, notes: 'Schedule return reminder in 5 weeks.', retentionLabel: 'At risk' },
   ] as BeautyBooking[],
+  automations: [
+    { id: 'auto-1', name: 'Overdue task reminder', trigger: 'overdue-task', action: 'Create notification for overdue delivery work', enabled: true },
+    { id: 'auto-2', name: 'Invoice follow-up', trigger: 'invoice-sent', action: 'Notify account owner to follow up on sent invoices', enabled: true },
+    { id: 'auto-3', name: 'Beauty 24h reminder', trigger: 'beauty-booking-tomorrow', action: 'Create reminder for tomorrow bookings', enabled: true },
+    { id: 'auto-4', name: 'VIP retention alert', trigger: 'vip-inactive', action: 'Flag VIP or at-risk clients for follow-up', enabled: true },
+    { id: 'auto-5', name: 'High-value lead proposal', trigger: 'high-value-lead', action: 'Suggest proposal task for high-value leads', enabled: true },
+  ] as AutomationRule[],
+  notifications: [
+    { id: 'note-1', title: 'Demo workspace ready', message: 'All best-of modules are available from the sidebar.', type: 'system', read: false, createdAt: '2026-04-24T09:00:00.000Z' },
+    { id: 'note-2', title: 'Invoice follow-up', message: 'Bloom Studio invoice is sent and waiting for payment.', type: 'invoice', read: false, createdAt: '2026-04-24T10:00:00.000Z' },
+    { id: 'note-3', title: 'VIP retention', message: 'Ana Ionescu needs a Beauty Studio follow-up.', type: 'booking', read: true, createdAt: '2026-04-24T11:00:00.000Z' },
+  ] as NotificationItem[],
 }
 
 const keyMap = {
@@ -110,10 +140,16 @@ const keyMap = {
   demos: 'clientflow_suite_demo_plans',
   impact: 'clientflow_suite_impact_goals',
   beauty: 'clientflow_suite_beauty_bookings',
+  automations: 'clientflow_suite_automation_rules',
+  notifications: 'clientflow_suite_notifications',
 } as const
 
 function uid(prefix: string) {
   return crypto.randomUUID?.() ?? `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
+export function createSuiteId(prefix: string) {
+  return uid(prefix)
 }
 
 export function readSuiteCollection<Key extends keyof typeof seeds>(key: Key): (typeof seeds)[Key] {
