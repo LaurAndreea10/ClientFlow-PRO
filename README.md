@@ -1,6 +1,6 @@
 # ClientFlow PRO
 
-> Complete best-of SaaS operations suite — workspace onboarding, industry-specific CRM configuration, team access roles, invite links, Command Center, global search, automations, notifications, CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, portfolio score, backup/restore, bilingual EN/RO interface, PWA support, and GitHub Pages-safe routing.
+> Complete best-of SaaS operations suite — Start Here demo flow, workspace onboarding, industry-specific CRM configuration, real rule-based UI permissions, team access roles, invite links, Command Center, global search, automations, notifications, CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, portfolio score, backup/restore, bilingual EN/RO interface, Supabase-ready architecture, PWA support, and GitHub Pages-safe routing.
 
 ClientFlow PRO is a portfolio-ready operational dashboard that merges the strongest ideas from:
 
@@ -31,11 +31,15 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 
 ## Product highlights
 
+- **Start Here** recruiter flow at `/#/start-here` with the recommended 6-step product demo
 - **Workspace onboarding** from account creation with industry-specific CRM setup
 - **Industry templates** for Beauty, Mecanic auto, Kinetoterapeut, Psiholog and Custom CRM
+- **Industry-aware CRM UI** in Clients, Tasks, Invoices, Services, Time Tracking and Beauty Studio
+- **Real rule-based UI permissions**: unsupported Add/Edit/Delete/Status actions are disabled by role
 - **Team access management** with Admin, Angajat and Angajat nou roles
 - **Permission matrix** for view, add, edit, delete, manage permissions, validate client status and full access
 - **Admin invite links**: admin can create employee access and copy/send a ClientFlow PRO link
+- **Supabase-ready architecture note** in `docs/SUPABASE_READY.md`
 - **Command Center** for priorities, open revenue, bookings, unread notifications and next-best-actions
 - **Global Search** across clients, tasks, invoices, services, bookings, demo plans and impact goals
 - **Automation Rules** with local run engine for overdue tasks, sent invoices, beauty reminders, VIP retention and high-value leads
@@ -46,7 +50,7 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 - **Best-of Suite page** that unifies CRM, automations, demo studio, impact roadmap and premium operations thinking
 - **Beauty Studio module** inspired by Beautyus: booking widget, live agenda, client desk, CSV export and retention automation cards
 - **AI Copilot** on Dashboard with local recommendations for overdue work, high-value leads, churn risk and revenue forecast
-- **Functional Invoicing module** with draft/sent/paid status and print-ready invoice layout
+- **Functional Invoicing module** with role-aware status actions and print-ready invoice layout
 - **Functional Service Templates module** for reusable packages, pricing, duration and deliverables
 - **Functional Time Tracking module** with billable estimate
 - **Functional Client Portal Preview** with simulated client-facing links and visible sections
@@ -55,9 +59,19 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 - **Backup / Restore JSON** in Settings for full local workspace export/import, including suite modules, workspace configuration, roles, access links, Beauty Studio bookings, automation rules and notifications
 - **Case Study page** inside the app for product story, problem, solution, architecture and future direction
 - Bilingual EN/RO interface across core flows
-- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/workspace-setup`, `/#/command-center`, `/#/automations`, `/#/notifications`, `/#/suite`, `/#/beauty`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
+- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/start-here`, `/#/workspace-setup`, `/#/command-center`, `/#/automations`, `/#/notifications`, `/#/suite`, `/#/beauty`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
 - React Query cache invalidation for a snappy local-first data layer
 - PWA-ready manifest, service worker registration and offline fallback
+
+## Recommended demo flow
+
+1. `/#/login` → click **Try Demo**
+2. `/#/start-here` → follow the guided demo path
+3. `/#/command-center` → show operational overview
+4. `/#/workspace-setup` → show industry setup, roles and invite links
+5. `/#/clients` or `/#/tasks` → show permission-aware UI and industry labels
+6. `/#/automations` → run rules and generate notifications
+7. `/#/portfolio-score` → close with readiness score
 
 ## Workspace and access roles
 
@@ -65,7 +79,7 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 | ---- | ------ |
 | Admin | Editează, modifică, șterge, adaugă permisiuni, gestionează accesul și are acces total |
 | Angajat | Vizualizează, adaugă și validează status client |
-| Angajat nou | View only |
+| Angajat nou | View only; Add/Edit/Delete/status actions are disabled in the UI |
 
 Adminul poate crea un profil de acces cu nume, email, rol și permisiuni custom, apoi poate copia linkul `/#/accept-access/:accessId` pentru angajat.
 
@@ -85,6 +99,8 @@ Adminul poate crea un profil de acces cu nume, email, rol și permisiuni custom,
 - Account creation with domain-specific workspace setup
 - Workspace Access page with CRM profile editing, custom fields, custom statuses and team invitations
 - Accept Access route for invite links
+- Start Here page with recruiter-focused demo flow
+- Permission-aware Clients, Tasks, Invoices, Services, Time Tracking and Beauty Studio pages
 - First-run interactive demo tour with guided navigation through Dashboard, Clients, Tasks and Reports
 - Toast notification system with success/info states, dismiss actions and undo support
 - Command Center page with operational KPIs and next actions
@@ -108,6 +124,7 @@ Adminul poate crea un profil de acces cu nume, email, rol și permisiuni custom,
 - Settings page with demo profile, bilingual language preference, backup/restore, theme preference, density, reduced motion, autosave and notifications
 - Best-of Suite page with automation flow, product readiness score, demo styles and roadmap modules
 - Case Study page with product narrative and technical direction
+- Supabase-ready architecture note with suggested tables, RLS sketch and migration path
 - Command palette with `Ctrl/Cmd + K` for pages, clients and tasks
 - PWA-ready manifest, service worker and offline fallback page
 - CI workflow, issue templates, PR template and portfolio assets
@@ -148,6 +165,7 @@ Required monthly cost: **€0**
 - Suite module storage through `src/lib/suiteStorage.ts`
 - Automation rule engine through `src/lib/automationEngine.ts`
 - Unified search helper through `src/lib/globalSearch.ts`
+- Supabase migration plan through `docs/SUPABASE_READY.md`
 - Route protection with local auth session
 - Small bilingual copy system through `src/lib/i18n.ts` and page-specific copy through `src/lib/pageCopy.ts`
 - Workspace backup utilities through `src/lib/backup.ts`
