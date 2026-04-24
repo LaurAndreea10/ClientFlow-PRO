@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/layout/AppLayout'
 import { ActivityPage } from './pages/ActivityPage'
 import { CalendarPage } from './pages/CalendarPage'
+import { CaseStudyPage } from './pages/CaseStudyPage'
 import { ClientDetailsPage } from './pages/ClientDetailsPage'
 import { ClientsPage } from './pages/ClientsPage'
 import { DashboardPage } from './pages/DashboardPage'
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/activity" element={<ActivityPage />} />
+          <Route path="/case-study" element={<CaseStudyPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Route>
