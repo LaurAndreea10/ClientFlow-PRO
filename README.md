@@ -1,6 +1,6 @@
 # ClientFlow PRO
 
-> Best-of SaaS operations suite — CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, backup/restore, bilingual EN/RO interface, PWA support, and GitHub Pages-safe routing.
+> Complete best-of SaaS operations suite — Command Center, global search, automations, notifications, CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, portfolio score, backup/restore, bilingual EN/RO interface, PWA support, and GitHub Pages-safe routing.
 
 ClientFlow PRO is a portfolio-ready operational dashboard that merges the strongest ideas from:
 
@@ -31,6 +31,12 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 
 ## Product highlights
 
+- **Command Center** for priorities, open revenue, bookings, unread notifications and next-best-actions
+- **Global Search** across clients, tasks, invoices, services, bookings, demo plans and impact goals
+- **Automation Rules** with local run engine for overdue tasks, sent invoices, beauty reminders, VIP retention and high-value leads
+- **Notifications Center** with read/unread state and generated automation notifications
+- **Portfolio Score** audit page for recruiter-facing demo readiness
+- **Public Portal Preview** route such as `/#/portal-preview/BLOOM-2026`
 - One-click demo mode with seeded CRM data, no signup friction and clear local-storage disclosure
 - **Best-of Suite page** that unifies CRM, automations, demo studio, impact roadmap and premium operations thinking
 - **Beauty Studio module** inspired by Beautyus: booking widget, live agenda, client desk, CSV export and retention automation cards
@@ -41,10 +47,10 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 - **Functional Client Portal Preview** with simulated client-facing links and visible sections
 - **Functional Demo Planner** with readiness score, style templates, shot list and JSON export
 - **Functional Impact Goals** dashboard with progress bars and mission metrics
-- **Backup / Restore JSON** in Settings for full local workspace export/import, including suite modules and Beauty Studio bookings
+- **Backup / Restore JSON** in Settings for full local workspace export/import, including suite modules, Beauty Studio bookings, automation rules and notifications
 - **Case Study page** inside the app for product story, problem, solution, architecture and future direction
 - Bilingual EN/RO interface across core flows
-- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/suite`, `/#/beauty`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
+- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/command-center`, `/#/automations`, `/#/notifications`, `/#/suite`, `/#/beauty`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
 - React Query cache invalidation for a snappy local-first data layer
 - PWA-ready manifest, service worker registration and offline fallback
 
@@ -53,16 +59,21 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 - Demo login with one-click access and local session state
 - First-run interactive demo tour with guided navigation through Dashboard, Clients, Tasks and Reports
 - Toast notification system with success/info states, dismiss actions and undo support
+- Command Center page with operational KPIs and next actions
+- Global Search page across the full local-first suite
+- Automations page with enable/disable state and manual run actions
+- Notifications page with generated inbox and read state
 - Dashboard with KPI cards, AI Copilot, workload widgets, revenue target and client status chart
 - Advanced Clients workspace with pipeline view, table view, search, filters, pinned accounts, archive/restore and tags
 - Advanced Tasks workspace with Kanban columns, status changes, archive/restore, saved views and sticky filters
 - Invoices page with invoice register, local status changes and printable invoice view
 - Services page with reusable service template cards and creation form
 - Time page with local time log and billable estimate
-- Portal page with simulated client portal previews
+- Portal page with simulated client portal previews plus public portal preview route
 - Beauty Studio page with service selection, stylist selection, booking form, agenda, retention labels, CSV export and follow-up statuses
 - Demo Planner page with URL, style, duration, objective, readiness score, shot list and JSON export
 - Impact page with goal progress and mission metrics
+- Portfolio Score page with automated readiness audit checklist
 - Reports page with analytics charts, CSV export, JSON export and print/PDF-ready output
 - Calendar timeline with week/month views, due today, overdue and upcoming widgets
 - Activity log with local audit timeline and notification center mock
@@ -84,9 +95,11 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 | Time | Local time entries with billable estimate |
 | Portal | Simulated client portal access codes and visible sections |
 | Beauty Studio | Bookings, stylists, services, spend, retention labels, agenda statuses and CSV export |
+| Automations | Enabled rules for tasks, invoices, bookings, VIP retention and high-value leads |
+| Notifications | Generated inbox items with read/unread state |
 | Demo Planner | Saved demo plans with readiness score and shot lists |
 | Impact | Goals with current/target progress tracking |
-| Backup | JSON export/import for core workspace and suite modules |
+| Backup | JSON export/import for core workspace and all suite modules |
 | Reset | Sidebar action that restores demo clients, tasks and notes |
 
 ## Best-of roadmap imported into ClientFlow PRO
@@ -124,9 +137,11 @@ src/
 
 ## Engineering highlights
 
-- TypeScript data models for clients, custom fields, tasks, subtasks, comments and recurrence
+- TypeScript data models for clients, custom fields, tasks, subtasks, comments, recurrence, suite modules, automations and notifications
 - Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
 - Suite module storage through `src/lib/suiteStorage.ts`
+- Automation rule engine through `src/lib/automationEngine.ts`
+- Unified search helper through `src/lib/globalSearch.ts`
 - Route protection with local auth session
 - Small bilingual copy system through `src/lib/i18n.ts` and page-specific copy through `src/lib/pageCopy.ts`
 - Workspace backup utilities through `src/lib/backup.ts`
@@ -152,16 +167,16 @@ npm run build
 
 ## Repo description
 
-Mobile-first bilingual CRM & operations suite built with React, TypeScript, PWA support, AI Copilot, invoicing, service templates, time tracking, client portal preview, beauty booking studio, demo planner, impact goals, best-of product suite, advanced client pipeline, Kanban, analytics, command palette, onboarding tour, backup/restore, resettable demo data and local-first storage.
+Mobile-first bilingual CRM & operations suite built with React, TypeScript, PWA support, Command Center, global search, automation rules, notifications center, AI Copilot, invoicing, service templates, time tracking, client portal preview, beauty booking studio, demo planner, impact goals, portfolio score, best-of product suite, advanced client pipeline, Kanban, analytics, onboarding tour, backup/restore, resettable demo data and local-first storage.
 
 ## Repo topics
 
-`react` `typescript` `vite` `crm` `dashboard` `kanban` `pwa` `portfolio-project` `localstorage` `mobile-first` `ai-copilot` `bilingual` `product-suite` `booking-system`
+`react` `typescript` `vite` `crm` `dashboard` `kanban` `pwa` `portfolio-project` `localstorage` `mobile-first` `ai-copilot` `bilingual` `product-suite` `booking-system` `automation`
 
 ## Trade-offs
 
 - Kept the app local-first to avoid cost and deployment complexity
-- AI Copilot is deterministic and local, not backed by a paid model API
+- AI Copilot and automations are deterministic and local, not backed by paid APIs
 - Client portal links are simulated previews, not public secure links
 - Beauty Studio automations are local workflow states, not real SMS/email notifications
 - PDF export uses the browser print flow instead of a paid document service
@@ -169,7 +184,7 @@ Mobile-first bilingual CRM & operations suite built with React, TypeScript, PWA 
 
 ## Future upgrades
 
-- Automation rules with manual run and audit log
+- Real scheduled automation runner with background jobs
 - Real public client portal with secure links
 - Invoice duplicate detection and branded invoice templates
 - Demo planner markdown export and Playwright runner export
