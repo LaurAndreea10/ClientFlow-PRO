@@ -1,0 +1,29 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" rx="36" fill="#090D16"/>
+  <rect x="48" y="48" width="1104" height="579" rx="32" fill="#101827" stroke="#263247"/>
+  <text x="92" y="112" fill="#A7F3D0" font-family="Inter, Arial" font-size="20" font-weight="800">Command Center</text>
+  <text x="92" y="166" fill="white" font-family="Inter, Arial" font-size="44" font-weight="900">Everything important, in one hub.</text>
+  <g transform="translate(92 220)">
+    <rect width="230" height="140" rx="24" fill="#172033"/>
+    <text x="24" y="48" fill="#AAB3C5" font-family="Inter, Arial" font-size="18">Overdue tasks</text>
+    <text x="24" y="104" fill="white" font-family="Inter, Arial" font-size="54" font-weight="900">4</text>
+  </g>
+  <g transform="translate(350 220)">
+    <rect width="230" height="140" rx="24" fill="#172033"/>
+    <text x="24" y="48" fill="#AAB3C5" font-family="Inter, Arial" font-size="18">Open revenue</text>
+    <text x="24" y="104" fill="white" font-family="Inter, Arial" font-size="54" font-weight="900">€5.2k</text>
+  </g>
+  <g transform="translate(608 220)">
+    <rect width="230" height="140" rx="24" fill="#172033"/>
+    <text x="24" y="48" fill="#AAB3C5" font-family="Inter, Arial" font-size="18">Bookings today</text>
+    <text x="24" y="104" fill="white" font-family="Inter, Arial" font-size="54" font-weight="900">7</text>
+  </g>
+  <g transform="translate(866 220)">
+    <rect width="230" height="140" rx="24" fill="#172033"/>
+    <text x="24" y="48" fill="#AAB3C5" font-family="Inter, Arial" font-size="18">Unread</text>
+    <text x="24" y="104" fill="white" font-family="Inter, Arial" font-size="54" font-weight="900">12</text>
+  </g>
+  <rect x="92" y="406" width="1004" height="146" rx="24" fill="#151D2E"/>
+  <text x="126" y="456" fill="white" font-family="Inter, Arial" font-size="28" font-weight="800">Next best actions</text>
+  <text x="126" y="500" fill="#AAB3C5" font-family="Inter, Arial" font-size="20">Run automations · Review notifications · Open invoices · Check bookings</text>
+</svg>
