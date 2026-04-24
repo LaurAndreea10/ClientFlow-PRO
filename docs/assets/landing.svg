@@ -1,0 +1,24 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" rx="36" fill="#080B12"/>
+  <circle cx="1020" cy="120" r="180" fill="#8B5CF6" opacity="0.18"/>
+  <circle cx="180" cy="620" r="240" fill="#22C55E" opacity="0.12"/>
+  <rect x="64" y="64" width="1072" height="547" rx="32" fill="#101522" stroke="#273044"/>
+  <text x="104" y="130" fill="#A7F3D0" font-family="Inter, Arial" font-size="22" font-weight="700">ClientFlow PRO</text>
+  <text x="104" y="200" fill="white" font-family="Inter, Arial" font-size="54" font-weight="900">Configurable CRM for service teams</text>
+  <text x="104" y="252" fill="#AAB3C5" font-family="Inter, Arial" font-size="24">Beauty · Auto · Kineto · Psychology · Custom</text>
+  <rect x="104" y="306" width="154" height="54" rx="18" fill="#22C55E"/>
+  <text x="139" y="341" fill="#07110B" font-family="Inter, Arial" font-size="18" font-weight="800">Try Demo</text>
+  <rect x="276" y="306" width="210" height="54" rx="18" fill="#1C2435" stroke="#3B455C"/>
+  <text x="314" y="341" fill="white" font-family="Inter, Arial" font-size="18" font-weight="700">Create Workspace</text>
+  <g transform="translate(640 148)">
+    <rect width="420" height="340" rx="28" fill="#151C2E" stroke="#303A50"/>
+    <text x="36" y="58" fill="#AAB3C5" font-family="Inter, Arial" font-size="16">Demo credentials</text>
+    <text x="36" y="106" fill="white" font-family="Inter, Arial" font-size="30" font-weight="800">demo@clientflow.pro</text>
+    <rect x="36" y="134" width="116" height="34" rx="17" fill="#2D374D"/>
+    <text x="58" y="157" fill="#E5E7EB" font-family="Inter, Arial" font-size="15" font-weight="700">demo1234</text>
+    <rect x="36" y="208" width="348" height="46" rx="16" fill="#0E1422"/>
+    <text x="58" y="238" fill="#D1D5DB" font-family="Inter, Arial" font-size="16">Role-based permissions</text>
+    <rect x="36" y="270" width="348" height="46" rx="16" fill="#0E1422"/>
+    <text x="58" y="300" fill="#D1D5DB" font-family="Inter, Arial" font-size="16">Supabase-ready architecture</text>
+  </g>
+</svg>
