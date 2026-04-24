@@ -5,6 +5,7 @@ import { archiveClient, createClient, getClients, restoreClient, toggleClientPin
 import { useToast } from '../components/ToastProvider'
 import { useLanguage } from '../lib/i18n'
 import { getPageCopy } from '../lib/pageCopy'
+import { can, getWorkspaceProfile } from '../lib/workspaceAccess'
 import type { ClientStage, ClientStatus } from '../types'
 
 const stageIds: ClientStage[] = ['new', 'qualified', 'proposal', 'negotiation', 'won', 'paused']
@@ -13,8 +14,14 @@ export function ClientsPage() {
   const queryClient = useQueryClient()
   const { pushToast, pushUndoToast } = useToast()
   const { language } = useLanguage()
+  const workspace = getWorkspaceProfile()
   const t = getPageCopy(language).clients
-  const stages = stageIds.map((id) => ({ id, label: t.stageLabels[id] }))
+  const customStageLabels = workspace?.statusLabels?.length ? workspace.statusLabels : null
+  const stages = stageIds.map((id, index) => ({ id, label: customStageLabels?.[index] ?? t.stageLabels[id] }))
+  const clientNoun = workspace?.clientLabel ?? t.title
+  const canAdd = can('add')
+  const canEdit = can('edit') || can('validateClientStatus')
+  const canDelete = can('delete')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<ClientStatus | 'all'>('all')
   const [showArchived, setShowArchived] = useState(false)
@@ -55,7 +62,8 @@ export function ClientsPage() {
     mutationFn: ({ id, nextStage }: { id: string; nextStage: ClientStage }) => updateClient(id, { stage: nextStage }),
     onSuccess: (client) => {
       refresh()
-      pushToast({ title: t.pipelineUpdated, message: `${client.name} ${t.movedTo} ${client.stage ? t.stageLabels[client.stage] : ''}.`, tone: 'success' })
+      const nextLabel = stages.find((item) => item.id === client.stage)?.label ?? client.stage
+      pushToast({ title: t.pipelineUpdated, message: `${client.name} ${t.movedTo} ${nextLabel}.`, tone: 'success' })
     },
   })
   const pinMutation = useMutation({
@@ -96,6 +104,7 @@ export function ClientsPage() {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    if (!canAdd) return
     createMutation.mutate({
       name,
       company,
@@ -107,7 +116,7 @@ export function ClientsPage() {
       tags: tags.split(',').map((tag) => tag.trim()).filter(Boolean),
       pinned: false,
       archived: false,
-      customFields: [],
+      customFields: (workspace?.customFields ?? []).map((field) => ({ id: field.toLowerCase().replace(/\s+/g, '-'), label: field, value: '' })),
     })
   }
 
@@ -115,9 +124,9 @@ export function ClientsPage() {
     <div className="grid">
       <div className="page-header">
         <div>
-          <p className="eyebrow">{t.eyebrow}</p>
-          <h1 className="page-title">{t.title}</h1>
-          <p className="muted">{t.description}</p>
+          <p className="eyebrow">{workspace?.customIndustry ?? workspace?.industry ?? t.eyebrow}</p>
+          <h1 className="page-title">{clientNoun}</h1>
+          <p className="muted">{workspace ? `CRM adaptat pentru ${workspace.customIndustry ?? workspace.industry}. ${workspace.serviceLabel}: ${workspace.customFields.join(', ')}` : t.description}</p>
         </div>
         <div className="toolbar">
           <button className={`button ${view === 'pipeline' ? '' : 'secondary'}`} onClick={() => setView('pipeline')} type="button">{t.pipeline}</button>
@@ -126,11 +135,18 @@ export function ClientsPage() {
       </div>
 
       <section className="grid stats">
-        <div className="card card-pad stat-card"><div className="small muted">{t.visiblePipeline}</div><div className="stat-value">{filtered.length}</div><div className="stat-change">{t.filteredAccounts}</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.visiblePipeline}</div><div className="stat-value">{filtered.length}</div><div className="stat-change">{clientNoun}</div></div>
         <div className="card card-pad stat-card"><div className="small muted">{t.pinned}</div><div className="stat-value">{pinnedClients.length}</div><div className="stat-change">{t.priorityClients}</div></div>
         <div className="card card-pad stat-card"><div className="small muted">{t.avgHealth}</div><div className="stat-value">{avgHealth}</div><div className="stat-change">{t.activeAccounts}</div></div>
         <div className="card card-pad stat-card"><div className="small muted">{t.pipelineValue}</div><div className="stat-value">€{pipelineValue}</div><div className="stat-change">{t.monthlyRetainers}</div></div>
       </section>
+
+      {!canAdd || !canEdit || !canDelete ? (
+        <section className="card card-pad">
+          <strong>Access mode</strong>
+          <p className="small muted" style={{ marginBottom: 0 }}>Permisiuni active: {canAdd ? 'add ' : ''}{canEdit ? 'validate/edit ' : ''}{canDelete ? 'delete' : ''}. Butoanele fără permisiune sunt dezactivate.</p>
+        </section>
+      ) : null}
 
       <section className="card card-pad sticky-filter-card">
         <div className="toolbar">
@@ -166,7 +182,7 @@ export function ClientsPage() {
                     <div className="card-title-row">
                       <div>
                         <strong>{item.label}</strong>
-                        <div className="small muted">{stageClients.length} {t.clients}</div>
+                        <div className="small muted">{stageClients.length} {clientNoun}</div>
                       </div>
                     </div>
                     <div className="list">
@@ -177,27 +193,24 @@ export function ClientsPage() {
                               <Link to={`/clients/${client.id}`}><strong>{client.name}</strong></Link>
                               <div className="small muted">{client.company}</div>
                             </div>
-                            <button className="icon-button" onClick={() => pinMutation.mutate(client.id)} type="button" aria-label={t.pin}>
+                            <button className="icon-button" disabled={!canEdit} onClick={() => pinMutation.mutate(client.id)} type="button" aria-label={t.pin}>
                               {client.pinned ? '★' : '☆'}
                             </button>
                           </div>
-                          <div className="health-row">
-                            <span>{t.health}</span>
-                            <strong>{client.healthScore ?? 0}</strong>
-                          </div>
+                          <div className="health-row"><span>{t.health}</span><strong>{client.healthScore ?? 0}</strong></div>
                           <div className="health-bar"><span style={{ width: `${client.healthScore ?? 0}%` }} /></div>
                           <div className="task-meta-row">
                             <span className={`badge ${client.status}`}>{client.status === 'active' ? t.active : client.status === 'inactive' ? t.inactive : t.lead}</span>
                             <span className="badge">€{client.monthlyValue}</span>
                             {(client.tags ?? []).map((tag) => <span className="badge" key={tag}>{tag}</span>)}
                           </div>
-                          <select className="select" value={client.stage} onChange={(event) => updateMutation.mutate({ id: client.id, nextStage: event.target.value as ClientStage })}>
+                          <select className="select" value={client.stage} disabled={!canEdit} onChange={(event) => updateMutation.mutate({ id: client.id, nextStage: event.target.value as ClientStage })}>
                             {stages.map((stageOption) => <option key={stageOption.id} value={stageOption.id}>{stageOption.label}</option>)}
                           </select>
                           {client.archived ? (
-                            <button className="button" onClick={() => restoreMutation.mutate(client.id)} type="button">{t.restore}</button>
+                            <button className="button" disabled={!canDelete} onClick={() => restoreMutation.mutate(client.id)} type="button">{t.restore}</button>
                           ) : (
-                            <button className="button secondary" onClick={() => archiveMutation.mutate(client.id)} type="button">{t.archive}</button>
+                            <button className="button secondary" disabled={!canDelete} onClick={() => archiveMutation.mutate(client.id)} type="button">{t.archive}</button>
                           )}
                         </article>
                       ))}
@@ -217,10 +230,10 @@ export function ClientsPage() {
                       <td><Link to={`/clients/${client.id}`}><strong>{client.pinned ? '★ ' : ''}{client.name}</strong></Link><div className="small muted">{client.email}</div></td>
                       <td>{client.company}</td>
                       <td><span className={`badge ${client.status}`}>{client.status === 'active' ? t.active : client.status === 'inactive' ? t.inactive : t.lead}</span></td>
-                      <td>{client.stage ? t.stageLabels[client.stage] : ''}</td>
+                      <td>{client.stage ? stages.find((item) => item.id === client.stage)?.label : ''}</td>
                       <td>{client.healthScore}</td>
                       <td>€{client.monthlyValue}</td>
-                      <td><button className="button secondary" onClick={() => pinMutation.mutate(client.id)}>{client.pinned ? t.unpin : t.pin}</button></td>
+                      <td><button className="button secondary" disabled={!canEdit} onClick={() => pinMutation.mutate(client.id)}>{client.pinned ? t.unpin : t.pin}</button></td>
                     </tr>
                   ))}
                   {filtered.length === 0 ? <tr><td colSpan={7}><div className="empty-state">{t.noClientsFound}</div></td></tr> : null}
@@ -232,25 +245,22 @@ export function ClientsPage() {
 
         <aside className="card card-pad sticky-action-panel">
           <div className="card-title-row">
-            <div>
-              <h2 style={{ margin: 0 }}>{t.addClient}</h2>
-              <div className="small muted">{t.addClientHint}</div>
-            </div>
+            <div><h2 style={{ margin: 0 }}>{t.addClient}</h2><div className="small muted">{canAdd ? t.addClientHint : 'View-only access: adăugarea este dezactivată.'}</div></div>
           </div>
           <form className="form-grid" onSubmit={handleSubmit}>
-            <input className="input" placeholder={t.name} value={name} onChange={(e) => setName(e.target.value)} required />
-            <input className="input" placeholder={t.company} value={company} onChange={(e) => setCompany(e.target.value)} required />
-            <input className="input" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <input className="input" placeholder={t.phone} value={phone} onChange={(e) => setPhone(e.target.value)} />
-            <select className="select" value={status} onChange={(e) => setStatus(e.target.value as ClientStatus)}>
+            <input className="input" placeholder={clientNoun} value={name} onChange={(e) => setName(e.target.value)} required disabled={!canAdd} />
+            <input className="input" placeholder={t.company} value={company} onChange={(e) => setCompany(e.target.value)} required disabled={!canAdd} />
+            <input className="input" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={!canAdd} />
+            <input className="input" placeholder={t.phone} value={phone} onChange={(e) => setPhone(e.target.value)} disabled={!canAdd} />
+            <select className="select" value={status} onChange={(e) => setStatus(e.target.value as ClientStatus)} disabled={!canAdd}>
               <option value="lead">{t.lead}</option><option value="active">{t.active}</option><option value="inactive">{t.inactive}</option>
             </select>
-            <select className="select" value={stage} onChange={(e) => setStage(e.target.value as ClientStage)}>
+            <select className="select" value={stage} onChange={(e) => setStage(e.target.value as ClientStage)} disabled={!canAdd}>
               {stages.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
             </select>
-            <input className="input" placeholder={t.monthlyValue} value={monthlyValue} onChange={(e) => setMonthlyValue(e.target.value)} />
-            <input className="input" placeholder={t.tagsPlaceholder} value={tags} onChange={(e) => setTags(e.target.value)} />
-            <button className="button" disabled={createMutation.isPending}>{createMutation.isPending ? t.saving : t.saveClient}</button>
+            <input className="input" placeholder={t.monthlyValue} value={monthlyValue} onChange={(e) => setMonthlyValue(e.target.value)} disabled={!canAdd} />
+            <input className="input" placeholder={t.tagsPlaceholder} value={tags} onChange={(e) => setTags(e.target.value)} disabled={!canAdd} />
+            <button className="button" disabled={!canAdd || createMutation.isPending}>{createMutation.isPending ? t.saving : t.saveClient}</button>
           </form>
         </aside>
       </div>
