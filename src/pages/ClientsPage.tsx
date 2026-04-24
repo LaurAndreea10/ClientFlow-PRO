@@ -2,6 +2,7 @@ import { FormEvent, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { archiveClient, createClient, getClients, restoreClient, toggleClientPinned, updateClient } from '../lib/mockApi'
+import { useToast } from '../components/ToastProvider'
 import type { ClientStage, ClientStatus } from '../types'
 
 const stages: { id: ClientStage; label: string }[] = [
@@ -15,6 +16,7 @@ const stages: { id: ClientStage; label: string }[] = [
 
 export function ClientsPage() {
   const queryClient = useQueryClient()
+  const { pushToast, pushUndoToast } = useToast()
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<ClientStatus | 'all'>('all')
   const [showArchived, setShowArchived] = useState(false)
@@ -37,8 +39,9 @@ export function ClientsPage() {
 
   const createMutation = useMutation({
     mutationFn: createClient,
-    onSuccess: () => {
+    onSuccess: (client) => {
       refresh()
+      pushToast({ title: 'Client created', message: `${client.name} was added to the pipeline.`, tone: 'success' })
       setName('')
       setCompany('')
       setEmail('')
@@ -50,10 +53,34 @@ export function ClientsPage() {
     },
   })
 
-  const updateMutation = useMutation({ mutationFn: ({ id, nextStage }: { id: string; nextStage: ClientStage }) => updateClient(id, { stage: nextStage }), onSuccess: refresh })
-  const pinMutation = useMutation({ mutationFn: toggleClientPinned, onSuccess: refresh })
-  const archiveMutation = useMutation({ mutationFn: archiveClient, onSuccess: refresh })
-  const restoreMutation = useMutation({ mutationFn: restoreClient, onSuccess: refresh })
+  const updateMutation = useMutation({
+    mutationFn: ({ id, nextStage }: { id: string; nextStage: ClientStage }) => updateClient(id, { stage: nextStage }),
+    onSuccess: (client) => {
+      refresh()
+      pushToast({ title: 'Pipeline updated', message: `${client.name} moved to ${client.stage}.`, tone: 'success' })
+    },
+  })
+  const pinMutation = useMutation({
+    mutationFn: toggleClientPinned,
+    onSuccess: (client) => {
+      refresh()
+      pushToast({ title: client.pinned ? 'Client pinned' : 'Client unpinned', message: client.name, tone: 'success' })
+    },
+  })
+  const archiveMutation = useMutation({
+    mutationFn: archiveClient,
+    onSuccess: (client) => {
+      refresh()
+      pushUndoToast('Client archived', `${client.name} moved out of active pipeline.`, () => restoreMutation.mutate(client.id))
+    },
+  })
+  const restoreMutation = useMutation({
+    mutationFn: restoreClient,
+    onSuccess: (client) => {
+      refresh()
+      pushToast({ title: 'Client restored', message: `${client.name} is active again.`, tone: 'success' })
+    },
+  })
 
   const filtered = useMemo(() => {
     const term = search.toLowerCase().trim()
