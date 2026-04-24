@@ -1,10 +1,13 @@
 import { FormEvent, useMemo, useState } from 'react'
 import { addSuiteItem, readSuiteCollection, type ImpactGoal } from '../lib/suiteStorage'
 import { useLanguage } from '../lib/i18n'
+import { can, getWorkspaceProfile } from '../lib/workspaceAccess'
 
 export function ImpactGoalsPage() {
   const { language } = useLanguage()
   const ro = language === 'RO'
+  const workspace = getWorkspaceProfile()
+  const canAdd = can('add')
   const [goals, setGoals] = useState<ImpactGoal[]>(() => readSuiteCollection('impact'))
   const [title, setTitle] = useState('')
   const [metric, setMetric] = useState('')
@@ -15,6 +18,7 @@ export function ImpactGoalsPage() {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    if (!canAdd) return
     addSuiteItem('impact', { title, metric, current: Number(current) || 0, target: Number(target) || 1, dueDate })
     setGoals(readSuiteCollection('impact'))
     setTitle('')
@@ -27,12 +31,14 @@ export function ImpactGoalsPage() {
     <div className="grid">
       <div className="page-header">
         <div>
-          <p className="eyebrow">ImpactPath</p>
+          <p className="eyebrow">{workspace?.customIndustry ?? workspace?.industry ?? 'ImpactPath'}</p>
           <h1 className="page-title">{ro ? 'Obiective, progres și impact' : 'Goals, progress and impact'}</h1>
-          <p className="muted">{ro ? 'Inspirat de ALPIS ImpactPath: misiune, progres și direcție vizibilă.' : 'Inspired by ALPIS ImpactPath: mission, progress and visible direction.'}</p>
+          <p className="muted">{workspace ? `Obiective pentru ${workspace.name}: ${workspace.clientLabel}, ${workspace.serviceLabel}.` : ro ? 'Inspirat de ALPIS ImpactPath: misiune, progres și direcție vizibilă.' : 'Inspired by ALPIS ImpactPath: mission, progress and visible direction.'}</p>
         </div>
         <div className="pill">{averageProgress}% progress</div>
       </div>
+
+      {!canAdd ? <section className="card card-pad"><strong>View-only access</strong><p className="small muted" style={{ marginBottom: 0 }}>Crearea de obiective este dezactivată pentru rolul curent.</p></section> : null}
 
       <section className="two-col">
         <div className="card card-pad">
@@ -56,12 +62,12 @@ export function ImpactGoalsPage() {
         <aside className="card card-pad">
           <h2>{ro ? 'Obiectiv nou' : 'New goal'}</h2>
           <form className="form-grid" onSubmit={handleSubmit}>
-            <input className="input" placeholder={ro ? 'Titlu' : 'Title'} value={title} onChange={(e) => setTitle(e.target.value)} required />
-            <input className="input" placeholder={ro ? 'Metrică' : 'Metric'} value={metric} onChange={(e) => setMetric(e.target.value)} required />
-            <input className="input" type="number" placeholder={ro ? 'Curent' : 'Current'} value={current} onChange={(e) => setCurrent(e.target.value)} />
-            <input className="input" type="number" placeholder={ro ? 'Țintă' : 'Target'} value={target} onChange={(e) => setTarget(e.target.value)} />
-            <input className="input" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-            <button className="button">{ro ? 'Salvează obiectiv' : 'Save goal'}</button>
+            <input className="input" placeholder={ro ? 'Titlu' : 'Title'} value={title} onChange={(e) => setTitle(e.target.value)} required disabled={!canAdd} />
+            <input className="input" placeholder={ro ? 'Metrică' : 'Metric'} value={metric} onChange={(e) => setMetric(e.target.value)} required disabled={!canAdd} />
+            <input className="input" type="number" placeholder={ro ? 'Curent' : 'Current'} value={current} onChange={(e) => setCurrent(e.target.value)} disabled={!canAdd} />
+            <input className="input" type="number" placeholder={ro ? 'Țintă' : 'Target'} value={target} onChange={(e) => setTarget(e.target.value)} disabled={!canAdd} />
+            <input className="input" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} disabled={!canAdd} />
+            <button className="button" disabled={!canAdd}>{ro ? 'Salvează obiectiv' : 'Save goal'}</button>
           </form>
         </aside>
       </section>
