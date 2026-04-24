@@ -1,8 +1,8 @@
 # ClientFlow PRO
 
-> All-in-one SaaS business management dashboard — clients, tasks, reports, calendar, kanban, activity log, command palette, onboarding tour, notifications, and settings.
+> All-in-one SaaS business management dashboard — clients, tasks, reports, calendar, kanban, activity log, command palette, onboarding tour, notifications, demo reset, PWA support, and settings.
 
-A mobile-first CRM and workflow dashboard built with React, TypeScript, Vite, and local-first storage.
+A portfolio-ready CRM and workflow dashboard built with React, TypeScript, Vite, React Query, Recharts, HashRouter routing, and local-first storage.
 
 ## 🚀 Live Demo
 
@@ -17,9 +17,20 @@ Or sign in with demo credentials:
 | Email    | `demo@clientflow.pro` |
 | Password | `demo1234`            |
 
-All changes in demo mode are saved locally in your browser — refresh freely, nothing leaves your device.
+All changes in demo mode are saved locally in your browser — refresh freely, nothing leaves your device. Use **Reset demo data** in the sidebar to restore the polished sample workspace at any time.
 
 ---
+
+## Portfolio highlights
+
+- One-click demo mode with seeded CRM data, no signup friction and clear local-storage disclosure
+- 6 realistic demo clients with stages, health scores, tags, pinned accounts, custom CRM fields and monthly values
+- 10 demo tasks across todo, in-progress and done states, including subtasks, comments, recurrence and priorities
+- Resettable demo workspace so reviewers can safely explore destructive actions
+- GitHub Pages-safe routing through `HashRouter` for reliable `/#/login` and `/#/dashboard` deep links
+- React Query cache invalidation for a snappy local-first data layer
+- PWA-ready manifest, service worker registration and offline fallback
+- Recruiter-friendly README with live link, credentials and clear cost model
 
 ## What this version includes
 
@@ -41,6 +52,18 @@ All changes in demo mode are saved locally in your browser — refresh freely, n
 - HashRouter GitHub Pages routing for reliable `/#/login` and `/#/dashboard` deep links
 - PWA-ready manifest, service worker and offline fallback page
 - CI workflow, issue templates, PR template and portfolio assets
+
+## Demo data model
+
+The demo workspace is intentionally dense enough to make every major page feel alive immediately:
+
+| Area | Included demo content |
+| ---- | --------------------- |
+| Clients | Active, lead and inactive accounts with tags, pipeline stages, health scores and custom fields |
+| Tasks | Todo, in-progress and done tasks with priorities, due dates, recurrence, subtasks and comments |
+| Notes | Client timeline notes that make detail pages feel realistic |
+| Auth | Local demo session compatible with the existing `User` type |
+| Reset | Sidebar action that restores demo clients, tasks and notes |
 
 ## Cost model
 
@@ -99,7 +122,7 @@ npm run build
 
 ## Repo description
 
-Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, advanced client pipeline, health score, custom fields, Kanban, recurring tasks, subtasks, comments, analytics, command palette, onboarding tour, notifications, undo actions and local-first storage.
+Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, advanced client pipeline, health score, custom fields, Kanban, recurring tasks, subtasks, comments, analytics, command palette, onboarding tour, notifications, undo actions, resettable demo data and local-first storage.
 
 ## Repo topics
 
