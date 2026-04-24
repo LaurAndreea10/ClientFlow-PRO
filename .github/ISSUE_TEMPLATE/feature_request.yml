@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an improvement / Sugerează o îmbunătățire
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Problemă
+      description: What problem would this solve? / Ce problemă ar rezolva?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution / Soluție propusă
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered / Alternative considerate
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area / Secțiune
+      options:
+        - Dashboard
+        - Clients
+        - Tasks / Kanban
+        - Reports
+        - Calendar
+        - Settings
+        - PWA / Offline
+        - i18n
+        - Theme
+        - Other
+    validations:
+      required: true
