@@ -6,38 +6,25 @@ import { DemoBadge } from '../DemoBadge'
 import { DemoTour } from '../DemoTour'
 import { PwaStatus } from '../PwaStatus'
 import { isDemoSession } from '../../auth/demoAuth'
+import { useLanguage } from '../../lib/i18n'
 import { logout, resetDemoWorkspace } from '../../lib/mockApi'
 
-const links = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/clients', label: 'Clients' },
-  { to: '/tasks', label: 'Tasks' },
-  { to: '/reports', label: 'Reports' },
-  { to: '/calendar', label: 'Calendar' },
-  { to: '/activity', label: 'Activity' },
-  { to: '/settings', label: 'Settings' },
-]
-
-const titles: Record<string, string> = {
-  '/dashboard': 'Portfolio dashboard',
-  '/clients': 'Client relationships',
-  '/tasks': 'Delivery workflow',
-  '/reports': 'Reports and analytics',
-  '/calendar': 'Calendar timeline',
-  '/activity': 'Activity log',
-  '/settings': 'Workspace settings',
-}
-
-const shortcuts = [
-  { label: '⌘K Search', hint: 'Command palette' },
-  { label: 'Quick add', hint: 'Create task flow' },
-  { label: 'Reports', hint: 'Export CSV / JSON' },
-]
+const linkKeys = [
+  { to: '/dashboard', key: 'dashboard' },
+  { to: '/clients', key: 'clients' },
+  { to: '/tasks', key: 'tasks' },
+  { to: '/reports', key: 'reports' },
+  { to: '/calendar', key: 'calendar' },
+  { to: '/activity', key: 'activity' },
+  { to: '/settings', key: 'settings' },
+] as const
 
 export function AppLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const queryClient = useQueryClient()
+  const { copy } = useLanguage()
+  const t = copy.layout
   const [resetting, setResetting] = useState(false)
   const demoMode = isDemoSession()
 
@@ -64,23 +51,23 @@ export function AppLayout() {
           <span>ClientFlow Pro</span>
         </Link>
         <p className="muted small" style={{ marginTop: 10 }}>
-          SaaS-style CRM starter with local-first storage, analytics, calendar, activity log and settings.
+          {t.productIntro}
         </p>
 
         <nav className="nav" aria-label="Main navigation">
-          {links.map((link) => (
+          {linkKeys.map((link) => (
             <NavLink key={link.to} to={link.to} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              <span>{link.label}</span>
+              <span>{t.links[link.key]}</span>
               <span className="muted">→</span>
             </NavLink>
           ))}
         </nav>
 
         <div className="sidebar-panel">
-          <div className="small muted">Command center</div>
-          <div style={{ marginTop: 8, fontWeight: 700 }}>Portfolio UX polish</div>
+          <div className="small muted">{t.commandCenter}</div>
+          <div style={{ marginTop: 8, fontWeight: 700 }}>{t.portfolioPolish}</div>
           <div className="list" style={{ marginTop: 12 }}>
-            {shortcuts.map((shortcut) => (
+            {t.shortcuts.map((shortcut) => (
               <div className="mini-item" key={shortcut.label}>
                 <strong>{shortcut.label}</strong>
                 <div className="small muted">{shortcut.hint}</div>
@@ -90,35 +77,35 @@ export function AppLayout() {
         </div>
 
         <div className="sidebar-panel">
-          <div className="small muted">Free-first mode</div>
-          <div style={{ marginTop: 8, fontWeight: 700 }}>No backend bill required</div>
+          <div className="small muted">{t.freeFirstMode}</div>
+          <div style={{ marginTop: 8, fontWeight: 700 }}>{t.noBackendBill}</div>
           <p className="small muted" style={{ marginTop: 8, marginBottom: 0 }}>
-            The current build stores demo auth, clients, tasks and notes directly in the browser.
+            {t.localBuild}
           </p>
           {demoMode ? (
             <button className="button secondary" onClick={handleResetDemo} disabled={resetting} style={{ marginTop: 14, width: '100%' }}>
-              {resetting ? 'Resetting demo...' : 'Reset demo data'}
+              {resetting ? t.resettingDemo : t.resetDemo}
             </button>
           ) : null}
         </div>
 
         <div style={{ marginTop: 24 }}>
-          <button className="button secondary" onClick={handleLogout}>Log out</button>
+          <button className="button secondary" onClick={handleLogout}>{t.logout}</button>
         </div>
       </aside>
 
       <main className="main">
         <div className="topbar">
           <div>
-            <div className="small muted">ClientFlow / Workspace</div>
-            <h2 className="topbar-title">{titles[location.pathname] ?? 'Workspace'}</h2>
+            <div className="small muted">{t.workspace}</div>
+            <h2 className="topbar-title">{t.titles[location.pathname as keyof typeof t.titles] ?? 'Workspace'}</h2>
           </div>
           <div className="topbar-actions">
             <PwaStatus />
             <CommandPalette />
             <DemoTour />
             <DemoBadge />
-            <Link className="button secondary" to="/tasks">Quick add</Link>
+            <Link className="button secondary" to="/tasks">{t.quickAdd}</Link>
           </div>
         </div>
         <Outlet />
