@@ -1,12 +1,13 @@
 name: Feature request
-description: Suggest an improvement / Sugerează o îmbunătățire
+description: Suggest a product, UX or engineering improvement / Propune o îmbunătățire de produs, UX sau engineering
 labels: ['enhancement']
 body:
   - type: textarea
     id: problem
     attributes:
-      label: Problem / Problemă
-      description: What problem would this solve? / Ce problemă ar rezolva?
+      label: Problem / Context
+      description: What user problem does this solve? / Ce problemă rezolvă?
+      placeholder: As a user, I want...
     validations:
       required: true
 
@@ -14,13 +15,9 @@ body:
     id: solution
     attributes:
       label: Proposed solution / Soluție propusă
+      description: Describe the feature, flow or UI change.
     validations:
       required: true
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives considered / Alternative considerate
 
   - type: dropdown
     id: area
@@ -32,10 +29,26 @@ body:
         - Tasks / Kanban
         - Reports
         - Calendar
+        - Activity log
         - Settings
+        - Accessibility
         - PWA / Offline
-        - i18n
-        - Theme
+        - Architecture
+        - Portfolio polish
         - Other
     validations:
       required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Trade-offs / Notes
+      description: Mention constraints, alternatives or follow-up work.
