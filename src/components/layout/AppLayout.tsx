@@ -11,6 +11,10 @@ import { useLanguage, type Language } from '../../lib/i18n'
 import { logout, resetDemoWorkspace } from '../../lib/mockApi'
 
 const linkKeys = [
+  { to: '/command-center', label: { EN: 'Command Center', RO: 'Command Center' } },
+  { to: '/search', label: { EN: 'Search', RO: 'Căutare' } },
+  { to: '/automations', label: { EN: 'Automations', RO: 'Automatizări' } },
+  { to: '/notifications', label: { EN: 'Notifications', RO: 'Notificări' } },
   { to: '/dashboard', label: { EN: 'Dashboard', RO: 'Dashboard' } },
   { to: '/suite', label: { EN: 'Suite', RO: 'Suită' } },
   { to: '/clients', label: { EN: 'Clients', RO: 'Clienți' } },
@@ -22,6 +26,7 @@ const linkKeys = [
   { to: '/beauty', label: { EN: 'Beauty Studio', RO: 'Beauty Studio' } },
   { to: '/demo-planner', label: { EN: 'Demo Planner', RO: 'Demo Planner' } },
   { to: '/impact', label: { EN: 'Impact', RO: 'Impact' } },
+  { to: '/portfolio-score', label: { EN: 'Portfolio Score', RO: 'Scor portofoliu' } },
   { to: '/reports', label: { EN: 'Reports', RO: 'Rapoarte' } },
   { to: '/calendar', label: { EN: 'Calendar', RO: 'Calendar' } },
   { to: '/activity', label: { EN: 'Activity', RO: 'Activitate' } },
@@ -31,6 +36,10 @@ const linkKeys = [
 
 const routeTitles: Record<Language, Record<string, string>> = {
   EN: {
+    '/command-center': 'Command Center',
+    '/search': 'Global search',
+    '/automations': 'Automation rules',
+    '/notifications': 'Notifications center',
     '/dashboard': 'Portfolio dashboard',
     '/suite': 'Best-of product suite',
     '/clients': 'Client relationships',
@@ -42,6 +51,7 @@ const routeTitles: Record<Language, Record<string, string>> = {
     '/beauty': 'Beauty Studio operations',
     '/demo-planner': 'Demo planner',
     '/impact': 'Impact goals',
+    '/portfolio-score': 'Portfolio readiness score',
     '/reports': 'Reports and analytics',
     '/calendar': 'Calendar timeline',
     '/activity': 'Activity log',
@@ -49,6 +59,10 @@ const routeTitles: Record<Language, Record<string, string>> = {
     '/settings': 'Workspace settings',
   },
   RO: {
+    '/command-center': 'Command Center',
+    '/search': 'Căutare globală',
+    '/automations': 'Reguli de automatizare',
+    '/notifications': 'Centru notificări',
     '/dashboard': 'Dashboard de portofoliu',
     '/suite': 'Suită completă de produs',
     '/clients': 'Relații cu clienții',
@@ -60,6 +74,7 @@ const routeTitles: Record<Language, Record<string, string>> = {
     '/beauty': 'Operațiuni Beauty Studio',
     '/demo-planner': 'Demo planner',
     '/impact': 'Obiective de impact',
+    '/portfolio-score': 'Scor readiness portofoliu',
     '/reports': 'Rapoarte și analytics',
     '/calendar': 'Calendar',
     '/activity': 'Jurnal de activitate',
