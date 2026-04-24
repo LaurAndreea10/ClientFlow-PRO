@@ -1,4 +1,4 @@
-import type { Client, DashboardStats, Note, Subtask, Task, TaskComment, User } from '../types'
+import type { Client, CustomField, DashboardStats, Note, Subtask, Task, TaskComment, User } from '../types'
 import { buildSeed } from '../data/seed'
 import {
   AUTH_KEY,
@@ -21,6 +21,33 @@ function createId(prefix: string) {
   return crypto.randomUUID?.() ?? `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
+function calculateHealthScore(client: Client) {
+  let score = 45
+  if (client.status === 'active') score += 25
+  if (client.status === 'lead') score += 10
+  if (client.monthlyValue >= 1500) score += 15
+  if ((client.tags ?? []).length > 0) score += 5
+  if (client.lastContactedAt) score += 10
+  return Math.min(100, score)
+}
+
+function normalizeClient(client: Client): Client {
+  const withDefaults: Client = {
+    ...client,
+    stage: client.stage ?? (client.status === 'lead' ? 'new' : client.status === 'active' ? 'won' : 'paused'),
+    tags: client.tags ?? [],
+    pinned: client.pinned ?? false,
+    archived: client.archived ?? false,
+    customFields: client.customFields ?? [],
+    lastContactedAt: client.lastContactedAt ?? client.createdAt,
+  }
+
+  return {
+    ...withDefaults,
+    healthScore: client.healthScore ?? calculateHealthScore(withDefaults),
+  }
+}
+
 function normalizeTask(task: Task): Task {
   return {
     ...task,
@@ -40,7 +67,7 @@ function ensureSeeded(userId: string) {
   const hasUserData = clients.some((item) => item.userId === userId)
   if (!hasUserData) {
     const seed = buildSeed(userId)
-    writeStorage(CLIENTS_KEY, [...clients, ...seed.clients])
+    writeStorage(CLIENTS_KEY, [...clients, ...seed.clients.map(normalizeClient)])
     writeStorage(TASKS_KEY, [...tasks, ...seed.tasks.map(normalizeTask)])
     writeStorage(NOTES_KEY, [...notes, ...seed.notes])
   }
@@ -76,17 +103,17 @@ export async function logout() {
 
 export async function getClients() {
   const userId = getUserId()
-  return readStorage<Client[]>(CLIENTS_KEY, []).filter((item) => item.userId === userId)
+  return readStorage<Client[]>(CLIENTS_KEY, []).filter((item) => item.userId === userId).map(normalizeClient)
 }
 
 export async function createClient(payload: Omit<Client, 'id' | 'createdAt' | 'userId'>) {
   const userId = getUserId()
-  const next: Client = {
+  const next: Client = normalizeClient({
     ...payload,
     id: createId('client'),
     userId,
     createdAt: new Date().toISOString(),
-  }
+  })
   const clients = readStorage<Client[]>(CLIENTS_KEY, [])
   writeStorage(CLIENTS_KEY, [next, ...clients])
   return next
@@ -97,7 +124,7 @@ export async function updateClient(id: string, payload: Partial<Client>) {
   let updated: Client | null = null
   const next = clients.map((item) => {
     if (item.id !== id) return item
-    updated = { ...item, ...payload }
+    updated = normalizeClient({ ...item, ...payload })
     return updated
   })
   writeStorage(CLIENTS_KEY, next)
@@ -113,6 +140,33 @@ export async function deleteClient(id: string) {
   writeStorage(TASKS_KEY, tasks.filter((item) => item.clientId !== id))
   writeStorage(NOTES_KEY, notes.filter((item) => item.clientId !== id))
   return true
+}
+
+export async function archiveClient(id: string) {
+  return updateClient(id, { archived: true })
+}
+
+export async function restoreClient(id: string) {
+  return updateClient(id, { archived: false })
+}
+
+export async function toggleClientPinned(id: string) {
+  const clients = await getClients()
+  const client = clients.find((item) => item.id === id)
+  if (!client) throw new Error('Client not found')
+  return updateClient(id, { pinned: !client.pinned })
+}
+
+export async function addClientCustomField(clientId: string, label: string, value: string) {
+  const clients = await getClients()
+  const client = clients.find((item) => item.id === clientId)
+  if (!client) throw new Error('Client not found')
+  const customFields: CustomField[] = [...(client.customFields ?? []), { id: createId('field'), label, value }]
+  return updateClient(clientId, { customFields })
+}
+
+export async function markClientContacted(clientId: string) {
+  return updateClient(clientId, { lastContactedAt: new Date().toISOString() })
 }
 
 export async function getTasks() {
@@ -214,7 +268,7 @@ export async function getClientById(id: string) {
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
-  const clients = await getClients()
+  const clients = (await getClients()).filter((client) => !client.archived)
   const tasks = (await getTasks()).filter((task) => !task.archived)
   const totalClients = clients.length
   const activeTasks = tasks.filter((item) => item.status !== 'done').length
