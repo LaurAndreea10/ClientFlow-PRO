@@ -1,9 +1,12 @@
+import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { CommandPalette } from '../CommandPalette'
 import { DemoBadge } from '../DemoBadge'
 import { DemoTour } from '../DemoTour'
 import { PwaStatus } from '../PwaStatus'
-import { logout } from '../../lib/mockApi'
+import { isDemoSession } from '../../auth/demoAuth'
+import { logout, resetDemoWorkspace } from '../../lib/mockApi'
 
 const links = [
   { to: '/dashboard', label: 'Dashboard' },
@@ -34,10 +37,23 @@ const shortcuts = [
 export function AppLayout() {
   const navigate = useNavigate()
   const location = useLocation()
+  const queryClient = useQueryClient()
+  const [resetting, setResetting] = useState(false)
+  const demoMode = isDemoSession()
 
   async function handleLogout() {
     await logout()
     navigate('/login')
+  }
+
+  async function handleResetDemo() {
+    if (!demoMode || resetting) return
+
+    setResetting(true)
+    await resetDemoWorkspace()
+    await queryClient.invalidateQueries()
+    setResetting(false)
+    navigate('/dashboard')
   }
 
   return (
@@ -79,6 +95,11 @@ export function AppLayout() {
           <p className="small muted" style={{ marginTop: 8, marginBottom: 0 }}>
             The current build stores demo auth, clients, tasks and notes directly in the browser.
           </p>
+          {demoMode ? (
+            <button className="button secondary" onClick={handleResetDemo} disabled={resetting} style={{ marginTop: 14, width: '100%' }}>
+              {resetting ? 'Resetting demo...' : 'Reset demo data'}
+            </button>
+          ) : null}
         </div>
 
         <div style={{ marginTop: 24 }}>
