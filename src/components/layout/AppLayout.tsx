@@ -11,6 +11,7 @@ import { useLanguage, type Language } from '../../lib/i18n'
 import { logout, resetDemoWorkspace } from '../../lib/mockApi'
 
 const linkKeys = [
+  { to: '/start-here', label: { EN: 'Start Here', RO: 'Start aici' } },
   { to: '/workspace-setup', label: { EN: 'Workspace Access', RO: 'Accese workspace' } },
   { to: '/command-center', label: { EN: 'Command Center', RO: 'Command Center' } },
   { to: '/search', label: { EN: 'Search', RO: 'Căutare' } },
@@ -37,6 +38,7 @@ const linkKeys = [
 
 const routeTitles: Record<Language, Record<string, string>> = {
   EN: {
+    '/start-here': 'Start Here demo flow',
     '/workspace-setup': 'Workspace access and CRM setup',
     '/command-center': 'Command Center',
     '/search': 'Global search',
@@ -61,6 +63,7 @@ const routeTitles: Record<Language, Record<string, string>> = {
     '/settings': 'Workspace settings',
   },
   RO: {
+    '/start-here': 'Flux demo Start aici',
     '/workspace-setup': 'Accese și configurare CRM',
     '/command-center': 'Command Center',
     '/search': 'Căutare globală',
@@ -173,7 +176,7 @@ export function AppLayout() {
             <CommandPalette />
             <DemoTour />
             <DemoBadge />
-            <Link className="button secondary" to="/tasks">{t.quickAdd}</Link>
+            <Link className="button secondary" to="/start-here">Start</Link>
           </div>
         </div>
         <Outlet />
