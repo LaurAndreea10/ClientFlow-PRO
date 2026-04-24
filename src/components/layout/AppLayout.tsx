@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { CommandPalette } from '../CommandPalette'
 import { DemoBadge } from '../DemoBadge'
+import { DemoTour } from '../DemoTour'
 import { logout } from '../../lib/mockApi'
 
 const links = [
@@ -98,6 +99,7 @@ export function AppLayout() {
           </div>
           <div className="topbar-actions">
             <CommandPalette />
+            <DemoTour />
             <DemoBadge />
             <Link className="button secondary" to="/tasks">Quick add</Link>
           </div>
