@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
+import { downloadWorkspaceBackup, restoreWorkspaceBackup } from '../lib/backup'
 import { notifyPreferencesChanged, PREFERENCES_KEY, useLanguage } from '../lib/i18n'
 
 type Preferences = {
@@ -29,10 +30,11 @@ function readPreferences(): Preferences {
 }
 
 export function SettingsPage() {
-  const { copy } = useLanguage()
+  const { language, copy } = useLanguage()
   const t = copy.settings
   const [preferences, setPreferences] = useState<Preferences>(() => readPreferences())
   const [saved, setSaved] = useState(false)
+  const [restoreMessage, setRestoreMessage] = useState('')
 
   useEffect(() => {
     localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences))
@@ -44,6 +46,22 @@ export function SettingsPage() {
 
   function updatePreference<Key extends keyof Preferences>(key: Key, value: Preferences[Key]) {
     setPreferences((current) => ({ ...current, [key]: value }))
+  }
+
+  async function handleRestore(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      const backup = await restoreWorkspaceBackup(file)
+      notifyPreferencesChanged()
+      setPreferences(readPreferences())
+      setRestoreMessage(language === 'RO' ? `Backup restaurat: ${backup.exportedAt}` : `Backup restored: ${backup.exportedAt}`)
+    } catch (error) {
+      setRestoreMessage(error instanceof Error ? error.message : language === 'RO' ? 'Backup invalid' : 'Invalid backup')
+    } finally {
+      event.target.value = ''
+    }
   }
 
   return (
@@ -109,6 +127,30 @@ export function SettingsPage() {
             </select>
           </div>
         </div>
+      </section>
+
+      <section className="card card-pad">
+        <div className="card-title-row">
+          <div>
+            <h2 style={{ margin: 0 }}>{language === 'RO' ? 'Backup și restore' : 'Backup and restore'}</h2>
+            <div className="small muted">
+              {language === 'RO'
+                ? 'Exportă sau restaurează workspace-ul local: sesiune, preferințe, clienți, task-uri, notițe și view-uri salvate.'
+                : 'Export or restore the local workspace: session, preferences, clients, tasks, notes and saved views.'}
+            </div>
+          </div>
+          <div className="pill">JSON</div>
+        </div>
+        <div className="toolbar">
+          <button className="button" type="button" onClick={downloadWorkspaceBackup}>
+            {language === 'RO' ? 'Descarcă backup JSON' : 'Download JSON backup'}
+          </button>
+          <label className="button secondary" style={{ cursor: 'pointer' }}>
+            {language === 'RO' ? 'Restaurează backup' : 'Restore backup'}
+            <input type="file" accept="application/json" onChange={handleRestore} style={{ display: 'none' }} />
+          </label>
+        </div>
+        {restoreMessage ? <div className="small muted" style={{ marginTop: 12 }}>{restoreMessage}</div> : null}
       </section>
 
       <section className="card card-pad">
