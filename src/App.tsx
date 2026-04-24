@@ -1,20 +1,26 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/layout/AppLayout'
 import { ActivityPage } from './pages/ActivityPage'
+import { AutomationsPage } from './pages/AutomationsPage'
 import { BeautyStudioPage } from './pages/BeautyStudioPage'
 import { CalendarPage } from './pages/CalendarPage'
 import { CaseStudyPage } from './pages/CaseStudyPage'
 import { ClientDetailsPage } from './pages/ClientDetailsPage'
 import { ClientPortalPage } from './pages/ClientPortalPage'
 import { ClientsPage } from './pages/ClientsPage'
+import { CommandCenterPage } from './pages/CommandCenterPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { DemoPlannerPage } from './pages/DemoPlannerPage'
 import { ImpactGoalsPage } from './pages/ImpactGoalsPage'
 import { InvoicingPage } from './pages/InvoicingPage'
 import { LoginPage } from './pages/LoginPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { NotificationsPage } from './pages/NotificationsPage'
+import { PortalPreviewPage } from './pages/PortalPreviewPage'
+import { PortfolioScorePage } from './pages/PortfolioScorePage'
 import { RegisterPage } from './pages/RegisterPage'
 import { ReportsPage } from './pages/ReportsPage'
+import { SearchPage } from './pages/SearchPage'
 import { ServicesPage } from './pages/ServicesPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { SuitePage } from './pages/SuitePage'
@@ -27,11 +33,17 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/portal-preview/:code" element={<PortalPreviewPage />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/command-center" element={<CommandCenterPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/automations" element={<AutomationsPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/portfolio-score" element={<PortfolioScorePage />} />
           <Route path="/suite" element={<SuitePage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/clients/:id" element={<ClientDetailsPage />} />
