@@ -42,7 +42,10 @@ export function ClientDetailsPage() {
     },
   })
 
-  const updateClientMutation = useMutation({ mutationFn: updateClient, onSuccess: refresh })
+  const updateClientMutation = useMutation({
+    mutationFn: ({ payload }: { payload: Parameters<typeof updateClient>[1] }) => updateClient(id, payload),
+    onSuccess: refresh,
+  })
   const pinMutation = useMutation({ mutationFn: toggleClientPinned, onSuccess: refresh })
   const archiveMutation = useMutation({ mutationFn: archiveClient, onSuccess: refresh })
   const restoreMutation = useMutation({ mutationFn: restoreClient, onSuccess: refresh })
@@ -135,13 +138,13 @@ export function ClientDetailsPage() {
             </div>
             <div className="form-grid">
               <label className="small muted">Status</label>
-              <select className="select" value={client.status} onChange={(event) => updateClientMutation.mutate({ id, payload: { status: event.target.value as ClientStatus } } as never)}>
+              <select className="select" value={client.status} onChange={(event) => updateClientMutation.mutate({ payload: { status: event.target.value as ClientStatus } })}>
                 <option value="lead">lead</option>
                 <option value="active">active</option>
                 <option value="inactive">inactive</option>
               </select>
               <label className="small muted">Pipeline stage</label>
-              <select className="select" value={client.stage} onChange={(event) => updateClientMutation.mutate({ id, payload: { stage: event.target.value as ClientStage } } as never)}>
+              <select className="select" value={client.stage} onChange={(event) => updateClientMutation.mutate({ payload: { stage: event.target.value as ClientStage } })}>
                 {stages.map((stage) => <option key={stage} value={stage}>{stage}</option>)}
               </select>
             </div>
@@ -185,7 +188,7 @@ export function ClientDetailsPage() {
               ))}
               {(client.customFields ?? []).length === 0 ? <div className="empty-state">No custom fields yet.</div> : null}
             </div>
-            <form className="inline-form" style={{ marginTop: 12 }} onSubmit={handleCustomFieldSubmit}>
+            <form className="inline-form three" style={{ marginTop: 12 }} onSubmit={handleCustomFieldSubmit}>
               <input className="input" placeholder="Field label" value={fieldLabel} onChange={(event) => setFieldLabel(event.target.value)} />
               <input className="input" placeholder="Value" value={fieldValue} onChange={(event) => setFieldValue(event.target.value)} />
               <button className="button secondary" disabled={customFieldMutation.isPending}>Add field</button>
