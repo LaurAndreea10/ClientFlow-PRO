@@ -2,6 +2,8 @@ import type { Client, CustomField, DashboardStats, Note, Subtask, Task, TaskComm
 import { buildSeed } from '../data/seed'
 import {
   AUTH_KEY,
+  DEMO_RESET_EVENT,
+  DEMO_USER_ID,
   createLocalSession,
   getSession as getAuthSession,
   login as loginWithDemoCredentials,
@@ -59,17 +61,33 @@ function normalizeTask(task: Task): Task {
   }
 }
 
-function ensureSeeded(userId: string) {
+function removeUserData(userId: string) {
   const clients = readStorage<Client[]>(CLIENTS_KEY, [])
   const tasks = readStorage<Task[]>(TASKS_KEY, [])
   const notes = readStorage<Note[]>(NOTES_KEY, [])
 
+  writeStorage(CLIENTS_KEY, clients.filter((item) => item.userId !== userId))
+  writeStorage(TASKS_KEY, tasks.filter((item) => item.userId !== userId))
+  writeStorage(NOTES_KEY, notes.filter((item) => item.userId !== userId))
+}
+
+function seedUserWorkspace(userId: string) {
+  const clients = readStorage<Client[]>(CLIENTS_KEY, [])
+  const tasks = readStorage<Task[]>(TASKS_KEY, [])
+  const notes = readStorage<Note[]>(NOTES_KEY, [])
+  const seed = buildSeed(userId)
+
+  writeStorage(CLIENTS_KEY, [...clients, ...seed.clients.map(normalizeClient)])
+  writeStorage(TASKS_KEY, [...tasks, ...seed.tasks.map(normalizeTask)])
+  writeStorage(NOTES_KEY, [...notes, ...seed.notes])
+}
+
+function ensureSeeded(userId: string) {
+  const clients = readStorage<Client[]>(CLIENTS_KEY, [])
   const hasUserData = clients.some((item) => item.userId === userId)
+
   if (!hasUserData) {
-    const seed = buildSeed(userId)
-    writeStorage(CLIENTS_KEY, [...clients, ...seed.clients.map(normalizeClient)])
-    writeStorage(TASKS_KEY, [...tasks, ...seed.tasks.map(normalizeTask)])
-    writeStorage(NOTES_KEY, [...notes, ...seed.notes])
+    seedUserWorkspace(userId)
   }
 }
 
@@ -99,6 +117,13 @@ export async function register(fullName: string, email: string, _password: strin
 
 export async function logout() {
   clearAuthSession()
+}
+
+export async function resetDemoWorkspace() {
+  removeUserData(DEMO_USER_ID)
+  seedUserWorkspace(DEMO_USER_ID)
+  window.dispatchEvent(new Event(DEMO_RESET_EVENT))
+  return true
 }
 
 export async function getClients() {
