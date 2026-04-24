@@ -1,11 +1,11 @@
 # ClientFlow PRO
 
-> Best-of SaaS operations suite — CRM, tasks, reports, calendar, AI Copilot, automation roadmap, demo studio thinking, impact roadmap, backup/restore, bilingual EN/RO interface, PWA support, and GitHub Pages-safe routing.
+> Best-of SaaS operations suite — CRM, tasks, invoices, service templates, time tracking, client portal preview, reports, calendar, AI Copilot, demo planner, impact goals, backup/restore, bilingual EN/RO interface, PWA support, and GitHub Pages-safe routing.
 
 ClientFlow PRO is a portfolio-ready operational dashboard that merges the strongest ideas from:
 
 - **Alpis Fusion CRM Premium** — AI assistant, premium UX, backup/restore, case-study positioning
-- **ClientFlow SaaS CRM Task Manager Automation Suite** — client operations, automations, service templates, invoicing direction, client portal direction
+- **ClientFlow SaaS CRM Task Manager Automation Suite** — client operations, automations, service templates, invoicing, time tracking, client portal
 - **ALPIS ImpactPath** — mission, progress and impact storytelling
 - **Link Video Editor Studio** — demo readiness, presentation styles, export mindset and product-demo planning
 
@@ -33,14 +33,16 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 - One-click demo mode with seeded CRM data, no signup friction and clear local-storage disclosure
 - **Best-of Suite page** that unifies CRM, automations, demo studio, impact roadmap and premium operations thinking
 - **AI Copilot** on Dashboard with local recommendations for overdue work, high-value leads, churn risk and revenue forecast
-- **Backup / Restore JSON** in Settings for full local workspace export/import
+- **Functional Invoicing module** with draft/sent/paid status and print-ready invoice layout
+- **Functional Service Templates module** for reusable packages, pricing, duration and deliverables
+- **Functional Time Tracking module** with billable estimate
+- **Functional Client Portal Preview** with simulated client-facing links and visible sections
+- **Functional Demo Planner** with readiness score, style templates, shot list and JSON export
+- **Functional Impact Goals** dashboard with progress bars and mission metrics
+- **Backup / Restore JSON** in Settings for full local workspace export/import, including suite modules
 - **Case Study page** inside the app for product story, problem, solution, architecture and future direction
-- Bilingual EN/RO interface across core flows, including Login, Layout, Dashboard, Settings, Clients and Tasks
-- Language preference persisted locally and applied instantly without refresh
-- 6 realistic demo clients with stages, health scores, tags, pinned accounts, custom CRM fields and monthly values
-- 10 demo tasks across todo, in-progress and done states, including subtasks, comments, recurrence and priorities
-- Resettable demo workspace so reviewers can safely explore destructive actions
-- GitHub Pages-safe routing through `HashRouter` for reliable `/#/login`, `/#/dashboard`, `/#/suite` and `/#/case-study` deep links
+- Bilingual EN/RO interface across core flows
+- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/suite`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
 - React Query cache invalidation for a snappy local-first data layer
 - PWA-ready manifest, service worker registration and offline fallback
 
@@ -51,11 +53,13 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 - Toast notification system with success/info states, dismiss actions and undo support
 - Dashboard with KPI cards, AI Copilot, workload widgets, revenue target and client status chart
 - Advanced Clients workspace with pipeline view, table view, search, filters, pinned accounts, archive/restore and tags
-- Client health score, pipeline stages, last-contact tracking and custom CRM fields
-- Client detail pages with account controls, linked tasks, custom fields and local notes timeline
 - Advanced Tasks workspace with Kanban columns, status changes, archive/restore, saved views and sticky filters
-- Undo for client/task archive actions
-- Recurring tasks, tags, subtasks with progress, and task comments
+- Invoices page with invoice register, local status changes and printable invoice view
+- Services page with reusable service template cards and creation form
+- Time page with local time log and billable estimate
+- Portal page with simulated client portal previews
+- Demo Planner page with URL, style, duration, objective, readiness score, shot list and JSON export
+- Impact page with goal progress and mission metrics
 - Reports page with analytics charts, CSV export, JSON export and print/PDF-ready output
 - Calendar timeline with week/month views, due today, overdue and upcoming widgets
 - Activity log with local audit timeline and notification center mock
@@ -68,17 +72,17 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 
 ## Demo data model
 
-The demo workspace is intentionally dense enough to make every major page feel alive immediately:
-
 | Area | Included demo content |
 | ---- | --------------------- |
 | Clients | Active, lead and inactive accounts with tags, pipeline stages, health scores and custom fields |
 | Tasks | Todo, in-progress and done tasks with priorities, due dates, recurrence, subtasks and comments |
-| Notes | Client timeline notes that make detail pages feel realistic |
-| Auth | Local demo session compatible with the existing `User` type |
-| Language | English/Romanian preference stored in browser preferences |
-| AI Copilot | Local recommendations based on clients, task deadlines, lead value and health score |
-| Backup | JSON export/import for session, preferences, clients, tasks, notes and saved views |
+| Invoices | Draft, sent and paid invoices with printable layout |
+| Services | Reusable service templates with pricing, duration and deliverables |
+| Time | Local time entries with billable estimate |
+| Portal | Simulated client portal access codes and visible sections |
+| Demo Planner | Saved demo plans with readiness score and shot lists |
+| Impact | Goals with current/target progress tracking |
+| Backup | JSON export/import for core workspace and suite modules |
 | Reset | Sidebar action that restores demo clients, tasks and notes |
 
 ## Best-of roadmap imported into ClientFlow PRO
@@ -86,9 +90,9 @@ The demo workspace is intentionally dense enough to make every major page feel a
 | Source project | Strongest idea brought into ClientFlow PRO |
 | -------------- | ------------------------------------------ |
 | Alpis Fusion CRM Premium | AI assistant, premium UX, backup/restore, case study, product vision |
-| ClientFlow SaaS CRM Task Manager Automation Suite | Automation flow, invoicing direction, service templates, time tracking, client portal direction |
+| ClientFlow SaaS CRM Task Manager Automation Suite | Automation flow, invoicing, service templates, time tracking, client portal |
 | ALPIS ImpactPath | Mission, progress, roadmap and impact framing |
-| Link Video Editor Studio | Demo readiness score, style templates, export thinking and demo-story planning |
+| Link Video Editor Studio | Demo readiness score, style templates, JSON export and demo-story planning |
 
 ## Cost model
 
@@ -117,6 +121,7 @@ src/
 
 - TypeScript data models for clients, custom fields, tasks, subtasks, comments and recurrence
 - Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
+- Suite module storage through `src/lib/suiteStorage.ts`
 - Route protection with local auth session
 - Small bilingual copy system through `src/lib/i18n.ts` and page-specific copy through `src/lib/pageCopy.ts`
 - Workspace backup utilities through `src/lib/backup.ts`
@@ -142,7 +147,7 @@ npm run build
 
 ## Repo description
 
-Mobile-first bilingual CRM & operations suite built with React, TypeScript, PWA support, AI Copilot, best-of product suite, advanced client pipeline, health score, custom fields, Kanban, recurring tasks, subtasks, comments, analytics, command palette, onboarding tour, backup/restore, resettable demo data and local-first storage.
+Mobile-first bilingual CRM & operations suite built with React, TypeScript, PWA support, AI Copilot, invoicing, service templates, time tracking, client portal preview, demo planner, impact goals, best-of product suite, advanced client pipeline, Kanban, analytics, command palette, onboarding tour, backup/restore, resettable demo data and local-first storage.
 
 ## Repo topics
 
@@ -152,19 +157,17 @@ Mobile-first bilingual CRM & operations suite built with React, TypeScript, PWA 
 
 - Kept the app local-first to avoid cost and deployment complexity
 - AI Copilot is deterministic and local, not backed by a paid model API
-- Invoicing, service templates, client portal and video-demo automation are represented as product-suite direction and roadmap modules, not full production billing/video systems yet
-- Client health score, task comments, recurrence and notifications are local mock features, not server-backed collaboration
+- Client portal links are simulated previews, not public secure links
 - PDF export uses the browser print flow instead of a paid document service
 - Service worker is intentionally simple and portfolio-friendly
 
 ## Future upgrades
 
-- Full invoicing module with duplicate detection and print/PDF layout
-- Service templates and time tracking
-- Client portal preview with shareable simulated links
 - Automation rules with manual run and audit log
-- Demo planner with markdown/JSON exports inspired by Link Video Editor Studio
-- Impact dashboard for goals, milestones and progress
+- Real public client portal with secure links
+- Invoice duplicate detection and branded invoice templates
+- Demo planner markdown export and Playwright runner export
+- Impact dashboard with milestone timeline
 - Real auth and sync with Supabase free tier
 - Multi-user collaboration
 - Persistent server-side audit trail
