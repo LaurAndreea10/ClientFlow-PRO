@@ -7,26 +7,51 @@ import { DemoTour } from '../DemoTour'
 import { LanguageSwitch } from '../LanguageSwitch'
 import { PwaStatus } from '../PwaStatus'
 import { isDemoSession } from '../../auth/demoAuth'
-import { useLanguage } from '../../lib/i18n'
+import { useLanguage, type Language } from '../../lib/i18n'
 import { logout, resetDemoWorkspace } from '../../lib/mockApi'
 
 const linkKeys = [
-  { to: '/dashboard', key: 'dashboard' },
-  { to: '/suite', key: 'suite' },
-  { to: '/clients', key: 'clients' },
-  { to: '/tasks', key: 'tasks' },
-  { to: '/reports', key: 'reports' },
-  { to: '/calendar', key: 'calendar' },
-  { to: '/activity', key: 'activity' },
-  { to: '/case-study', key: 'caseStudy' },
-  { to: '/settings', key: 'settings' },
+  { to: '/dashboard', label: { EN: 'Dashboard', RO: 'Dashboard' } },
+  { to: '/suite', label: { EN: 'Suite', RO: 'Suită' } },
+  { to: '/clients', label: { EN: 'Clients', RO: 'Clienți' } },
+  { to: '/tasks', label: { EN: 'Tasks', RO: 'Task-uri' } },
+  { to: '/reports', label: { EN: 'Reports', RO: 'Rapoarte' } },
+  { to: '/calendar', label: { EN: 'Calendar', RO: 'Calendar' } },
+  { to: '/activity', label: { EN: 'Activity', RO: 'Activitate' } },
+  { to: '/case-study', label: { EN: 'Case Study', RO: 'Studiu de caz' } },
+  { to: '/settings', label: { EN: 'Settings', RO: 'Setări' } },
 ] as const
+
+const routeTitles: Record<Language, Record<string, string>> = {
+  EN: {
+    '/dashboard': 'Portfolio dashboard',
+    '/suite': 'Best-of product suite',
+    '/clients': 'Client relationships',
+    '/tasks': 'Delivery workflow',
+    '/reports': 'Reports and analytics',
+    '/calendar': 'Calendar timeline',
+    '/activity': 'Activity log',
+    '/case-study': 'Product case study',
+    '/settings': 'Workspace settings',
+  },
+  RO: {
+    '/dashboard': 'Dashboard de portofoliu',
+    '/suite': 'Suită completă de produs',
+    '/clients': 'Relații cu clienții',
+    '/tasks': 'Flux de livrare',
+    '/reports': 'Rapoarte și analytics',
+    '/calendar': 'Calendar',
+    '/activity': 'Jurnal de activitate',
+    '/case-study': 'Studiu de caz produs',
+    '/settings': 'Setări workspace',
+  },
+}
 
 export function AppLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const queryClient = useQueryClient()
-  const { copy } = useLanguage()
+  const { language, copy } = useLanguage()
   const t = copy.layout
   const [resetting, setResetting] = useState(false)
   const demoMode = isDemoSession()
@@ -60,7 +85,7 @@ export function AppLayout() {
         <nav className="nav" aria-label="Main navigation">
           {linkKeys.map((link) => (
             <NavLink key={link.to} to={link.to} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              <span>{t.links[link.key]}</span>
+              <span>{link.label[language]}</span>
               <span className="muted">→</span>
             </NavLink>
           ))}
@@ -101,7 +126,7 @@ export function AppLayout() {
         <div className="topbar">
           <div>
             <div className="small muted">{t.workspace}</div>
-            <h2 className="topbar-title">{t.titles[location.pathname as keyof typeof t.titles] ?? 'Workspace'}</h2>
+            <h2 className="topbar-title">{routeTitles[language][location.pathname] ?? 'Workspace'}</h2>
           </div>
           <div className="topbar-actions">
             <LanguageSwitch />
