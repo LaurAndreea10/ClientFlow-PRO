@@ -11,6 +11,7 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { ReportsPage } from './pages/ReportsPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { SuitePage } from './pages/SuitePage'
 import { TasksPage } from './pages/TasksPage'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 
@@ -24,6 +25,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/suite" element={<SuitePage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/clients/:id" element={<ClientDetailsPage />} />
           <Route path="/tasks" element={<TasksPage />} />
