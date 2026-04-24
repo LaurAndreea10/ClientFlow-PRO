@@ -12,14 +12,13 @@ import {
   updateTask,
 } from '../lib/mockApi'
 import { useToast } from '../components/ToastProvider'
+import { useLanguage } from '../lib/i18n'
+import { getPageCopy } from '../lib/pageCopy'
+import type { Language } from '../lib/i18n'
 import type { RecurrenceRule, Task, TaskPriority, TaskStatus } from '../types'
 
 const SAVED_VIEW_KEY = 'clientflow_task_saved_view'
-const columns: { id: TaskStatus; label: string; hint: string }[] = [
-  { id: 'todo', label: 'Todo', hint: 'Planned work' },
-  { id: 'in_progress', label: 'In progress', hint: 'Active delivery' },
-  { id: 'done', label: 'Done', hint: 'Completed' },
-]
+const columnIds: TaskStatus[] = ['todo', 'in_progress', 'done']
 
 function getSavedView() {
   try {
@@ -30,9 +29,10 @@ function getSavedView() {
   }
 }
 
-function TaskCard({ task, clientName, onMove, onArchive, onRestore, onAddSubtask, onToggleSubtask, onAddComment }: {
+function TaskCard({ task, clientName, language, onMove, onArchive, onRestore, onAddSubtask, onToggleSubtask, onAddComment }: {
   task: Task
   clientName: string
+  language: Language
   onMove: (id: string, status: TaskStatus) => void
   onArchive: (id: string) => void
   onRestore: (id: string) => void
@@ -40,6 +40,12 @@ function TaskCard({ task, clientName, onMove, onArchive, onRestore, onAddSubtask
   onToggleSubtask: (taskId: string, subtaskId: string) => void
   onAddComment: (id: string, content: string) => void
 }) {
+  const t = getPageCopy(language).tasks
+  const columns = [
+    { id: 'todo' as TaskStatus, label: t.todo },
+    { id: 'in_progress' as TaskStatus, label: t.inProgress },
+    { id: 'done' as TaskStatus, label: t.done },
+  ]
   const [subtaskTitle, setSubtaskTitle] = useState('')
   const [comment, setComment] = useState('')
   const subtasks = task.subtasks ?? []
@@ -67,16 +73,16 @@ function TaskCard({ task, clientName, onMove, onArchive, onRestore, onAddSubtask
           <strong>{task.title}</strong>
           <div className="small muted">{clientName}</div>
         </div>
-        <span className={`badge ${task.priority}`}>{task.priority}</span>
+        <span className={`badge ${task.priority}`}>{task.priority === 'low' ? t.low : task.priority === 'high' ? t.high : t.medium}</span>
       </div>
-      <p className="small" style={{ marginBottom: 10 }}>{task.description || 'No description yet.'}</p>
+      <p className="small" style={{ marginBottom: 10 }}>{task.description || t.noDescription}</p>
       <div className="task-meta-row">
-        <span className="badge">Due {task.dueDate || 'not set'}</span>
-        <span className="badge">{task.recurrence ?? 'none'}</span>
+        <span className="badge">{t.due} {task.dueDate || t.notSet}</span>
+        <span className="badge">{task.recurrence === 'daily' ? t.daily : task.recurrence === 'weekly' ? t.weekly : task.recurrence === 'monthly' ? t.monthly : t.noRecurrence}</span>
         {(task.tags ?? []).map((tag) => <span className="badge" key={tag}>{tag}</span>)}
       </div>
       <div className="subtask-box">
-        <div className="small muted">Subtasks {doneSubtasks}/{subtasks.length}</div>
+        <div className="small muted">{t.subtasks} {doneSubtasks}/{subtasks.length}</div>
         <div className="subtask-progress"><span style={{ width: `${subtasks.length ? (doneSubtasks / subtasks.length) * 100 : 0}%` }} /></div>
         <div className="list" style={{ marginTop: 8 }}>
           {subtasks.map((subtask) => (
@@ -87,12 +93,12 @@ function TaskCard({ task, clientName, onMove, onArchive, onRestore, onAddSubtask
           ))}
         </div>
         <form className="inline-form" onSubmit={handleSubtaskSubmit}>
-          <input className="input" value={subtaskTitle} onChange={(event) => setSubtaskTitle(event.target.value)} placeholder="Add subtask..." />
-          <button className="button secondary">Add</button>
+          <input className="input" value={subtaskTitle} onChange={(event) => setSubtaskTitle(event.target.value)} placeholder={t.addSubtask} />
+          <button className="button secondary">{t.add}</button>
         </form>
       </div>
       <div className="comment-box">
-        <div className="small muted">Comments · {comments.length}</div>
+        <div className="small muted">{t.comments} · {comments.length}</div>
         {comments.slice(-2).map((item) => (
           <div className="mini-item" key={item.id}>
             <strong>{item.author}</strong>
@@ -100,8 +106,8 @@ function TaskCard({ task, clientName, onMove, onArchive, onRestore, onAddSubtask
           </div>
         ))}
         <form className="inline-form" onSubmit={handleCommentSubmit}>
-          <input className="input" value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Add comment..." />
-          <button className="button secondary">Post</button>
+          <input className="input" value={comment} onChange={(event) => setComment(event.target.value)} placeholder={t.addComment} />
+          <button className="button secondary">{t.post}</button>
         </form>
       </div>
       <div className="toolbar">
@@ -111,9 +117,9 @@ function TaskCard({ task, clientName, onMove, onArchive, onRestore, onAddSubtask
           </button>
         ))}
         {task.archived ? (
-          <button className="button" onClick={() => onRestore(task.id)} type="button">Restore</button>
+          <button className="button" onClick={() => onRestore(task.id)} type="button">{t.restore}</button>
         ) : (
-          <button className="button danger" onClick={() => onArchive(task.id)} type="button">Archive</button>
+          <button className="button danger" onClick={() => onArchive(task.id)} type="button">{t.archive}</button>
         )}
       </div>
     </article>
@@ -123,6 +129,13 @@ function TaskCard({ task, clientName, onMove, onArchive, onRestore, onAddSubtask
 export function TasksPage() {
   const queryClient = useQueryClient()
   const { pushToast, pushUndoToast } = useToast()
+  const { language } = useLanguage()
+  const t = getPageCopy(language).tasks
+  const columns = [
+    { id: columnIds[0], label: t.todo, hint: t.plannedWork },
+    { id: columnIds[1], label: t.inProgress, hint: t.activeDelivery },
+    { id: columnIds[2], label: t.done, hint: t.completed },
+  ]
   const savedView = getSavedView()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -148,7 +161,7 @@ export function TasksPage() {
     mutationFn: createTask,
     onSuccess: (task) => {
       refreshTasks()
-      pushToast({ title: 'Task created', message: task.title, tone: 'success' })
+      pushToast({ title: t.taskCreated, message: task.title, tone: 'success' })
       setTitle('')
       setDescription('')
       setClientId('')
@@ -164,7 +177,8 @@ export function TasksPage() {
     mutationFn: ({ id, nextStatus }: { id: string; nextStatus: TaskStatus }) => updateTask(id, { status: nextStatus }),
     onSuccess: (task) => {
       refreshTasks()
-      pushToast({ title: 'Task moved', message: `${task.title} is now ${task.status.replace('_', ' ')}.`, tone: 'success' })
+      const statusLabel = task.status === 'todo' ? t.todo : task.status === 'in_progress' ? t.inProgress : t.done
+      pushToast({ title: t.taskMoved, message: `${task.title} ${t.isNow} ${statusLabel}.`, tone: 'success' })
     },
   })
 
@@ -172,21 +186,21 @@ export function TasksPage() {
     mutationFn: archiveTask,
     onSuccess: (task) => {
       refreshTasks()
-      pushUndoToast('Task archived', `${task.title} moved to archive.`, () => restoreMutation.mutate(task.id))
+      pushUndoToast(t.taskArchived, `${task.title} ${t.movedToArchive}`, () => restoreMutation.mutate(task.id))
     },
   })
   const restoreMutation = useMutation({
     mutationFn: restoreTask,
     onSuccess: (task) => {
       refreshTasks()
-      pushToast({ title: 'Task restored', message: task.title, tone: 'success' })
+      pushToast({ title: t.taskRestored, message: task.title, tone: 'success' })
     },
   })
   const addSubtaskMutation = useMutation({
     mutationFn: ({ id, title }: { id: string; title: string }) => addSubtask(id, title),
     onSuccess: (task) => {
       refreshTasks()
-      pushToast({ title: 'Subtask added', message: task.title, tone: 'success' })
+      pushToast({ title: t.subtaskAdded, message: task.title, tone: 'success' })
     },
   })
   const toggleSubtaskMutation = useMutation({ mutationFn: ({ taskId, subtaskId }: { taskId: string; subtaskId: string }) => toggleSubtask(taskId, subtaskId), onSuccess: refreshTasks })
@@ -194,7 +208,7 @@ export function TasksPage() {
     mutationFn: ({ id, content }: { id: string; content: string }) => addTaskComment(id, content),
     onSuccess: (task) => {
       refreshTasks()
-      pushToast({ title: 'Comment added', message: task.title, tone: 'success' })
+      pushToast({ title: t.commentAdded, message: task.title, tone: 'success' })
     },
   })
 
@@ -228,7 +242,7 @@ export function TasksPage() {
 
   function saveView() {
     localStorage.setItem(SAVED_VIEW_KEY, JSON.stringify({ search, priority: priorityFilter }))
-    pushToast({ title: 'View saved', message: 'Your task filters are stored locally.', tone: 'success' })
+    pushToast({ title: t.viewSaved, message: t.viewSavedMessage, tone: 'success' })
   }
 
   function resetView() {
@@ -236,7 +250,7 @@ export function TasksPage() {
     setPriorityFilter('all')
     setShowArchived(false)
     localStorage.removeItem(SAVED_VIEW_KEY)
-    pushToast({ title: 'View reset', message: 'Saved task filters were cleared.', tone: 'info' })
+    pushToast({ title: t.viewReset, message: t.viewResetMessage, tone: 'info' })
   }
 
   const dueToday = tasks.filter((task) => task.dueDate === new Date().toISOString().slice(0, 10) && !task.archived).length
@@ -246,28 +260,28 @@ export function TasksPage() {
     <div className="grid">
       <div className="page-header">
         <div>
-          <p className="eyebrow">Operations</p>
-          <h1 className="page-title">Tasks</h1>
-          <p className="muted">Kanban workflow with recurring tasks, subtasks, comments, tags, archive and saved views.</p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1 className="page-title">{t.title}</h1>
+          <p className="muted">{t.description}</p>
         </div>
         <div className="toolbar">
-          <button className="button secondary" onClick={saveView} type="button">Save view</button>
-          <button className="button secondary" onClick={resetView} type="button">Reset</button>
+          <button className="button secondary" onClick={saveView} type="button">{t.saveView}</button>
+          <button className="button secondary" onClick={resetView} type="button">{t.reset}</button>
         </div>
       </div>
       <section className="grid stats">
-        <div className="card card-pad stat-card"><div className="small muted">Visible tasks</div><div className="stat-value">{filteredTasks.length}</div><div className="stat-change">Saved filters ready</div></div>
-        <div className="card card-pad stat-card"><div className="small muted">Due today</div><div className="stat-value">{dueToday}</div><div className="stat-change">Smart widget</div></div>
-        <div className="card card-pad stat-card"><div className="small muted">Recurring</div><div className="stat-value">{recurring}</div><div className="stat-change">Automation-ready</div></div>
-        <div className="card card-pad stat-card"><div className="small muted">Archived</div><div className="stat-value">{tasks.filter((task) => task.archived).length}</div><div className="stat-change">Clean workspace</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.visibleTasks}</div><div className="stat-value">{filteredTasks.length}</div><div className="stat-change">{t.savedFiltersReady}</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.dueToday}</div><div className="stat-value">{dueToday}</div><div className="stat-change">{t.smartWidget}</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.recurring}</div><div className="stat-value">{recurring}</div><div className="stat-change">{t.automationReady}</div></div>
+        <div className="card card-pad stat-card"><div className="small muted">{t.archived}</div><div className="stat-value">{tasks.filter((task) => task.archived).length}</div><div className="stat-change">{t.cleanWorkspace}</div></div>
       </section>
       <section className="card card-pad sticky-filter-card">
         <div className="toolbar">
-          <input className="input" style={{ maxWidth: 420 }} placeholder="Search task, tag, client..." value={search} onChange={(event) => setSearch(event.target.value)} />
+          <input className="input" style={{ maxWidth: 420 }} placeholder={t.searchPlaceholder} value={search} onChange={(event) => setSearch(event.target.value)} />
           <select className="select" style={{ maxWidth: 220 }} value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value as TaskPriority | 'all')}>
-            <option value="all">All priorities</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option>
+            <option value="all">{t.allPriorities}</option><option value="low">{t.low}</option><option value="medium">{t.medium}</option><option value="high">{t.high}</option>
           </select>
-          <button className={`button ${showArchived ? '' : 'secondary'}`} onClick={() => setShowArchived((current) => !current)} type="button">{showArchived ? 'Showing archived' : 'Active only'}</button>
+          <button className={`button ${showArchived ? '' : 'secondary'}`} onClick={() => setShowArchived((current) => !current)} type="button">{showArchived ? t.showingArchived : t.activeOnly}</button>
         </div>
       </section>
       <div className="two-col tasks-layout">
@@ -279,26 +293,26 @@ export function TasksPage() {
                 <div className="card-title-row"><div><h2 style={{ margin: 0 }}>{column.label}</h2><div className="small muted">{column.hint}</div></div><span className="pill">{columnTasks.length}</span></div>
                 <div className="list">
                   {columnTasks.map((task) => (
-                    <TaskCard key={task.id} task={task} clientName={task.clientId ? clientsById.get(task.clientId) ?? 'Unknown client' : 'General'} onMove={(id, nextStatus) => updateMutation.mutate({ id, nextStatus })} onArchive={(id) => archiveMutation.mutate(id)} onRestore={(id) => restoreMutation.mutate(id)} onAddSubtask={(id, nextTitle) => addSubtaskMutation.mutate({ id, title: nextTitle })} onToggleSubtask={(taskId, subtaskId) => toggleSubtaskMutation.mutate({ taskId, subtaskId })} onAddComment={(id, content) => addCommentMutation.mutate({ id, content })} />
+                    <TaskCard key={task.id} task={task} language={language} clientName={task.clientId ? clientsById.get(task.clientId) ?? t.unknownClient : t.general} onMove={(id, nextStatus) => updateMutation.mutate({ id, nextStatus })} onArchive={(id) => archiveMutation.mutate(id)} onRestore={(id) => restoreMutation.mutate(id)} onAddSubtask={(id, nextTitle) => addSubtaskMutation.mutate({ id, title: nextTitle })} onToggleSubtask={(taskId, subtaskId) => toggleSubtaskMutation.mutate({ taskId, subtaskId })} onAddComment={(id, content) => addCommentMutation.mutate({ id, content })} />
                   ))}
-                  {columnTasks.length === 0 ? <div className="empty-state">No tasks here.</div> : null}
+                  {columnTasks.length === 0 ? <div className="empty-state">{t.noTasksHere}</div> : null}
                 </div>
               </div>
             )
           })}
         </section>
         <aside className="card card-pad sticky-action-panel">
-          <div className="card-title-row"><div><h2 style={{ margin: 0 }}>Quick add</h2><div className="small muted">Create tagged, recurring work in one flow.</div></div></div>
+          <div className="card-title-row"><div><h2 style={{ margin: 0 }}>{t.quickAdd}</h2><div className="small muted">{t.quickAddHint}</div></div></div>
           <form className="form-grid" onSubmit={handleSubmit}>
-            <input className="input" placeholder="Task title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-            <textarea className="textarea" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} rows={4} />
-            <select className="select" value={clientId} onChange={(e) => setClientId(e.target.value)}><option value="">General task</option>{clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}</select>
-            <select className="select" value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select>
-            <select className="select" value={status} onChange={(e) => setStatus(e.target.value as TaskStatus)}><option value="todo">todo</option><option value="in_progress">in progress</option><option value="done">done</option></select>
-            <select className="select" value={recurrence} onChange={(e) => setRecurrence(e.target.value as RecurrenceRule)}><option value="none">no recurrence</option><option value="daily">daily</option><option value="weekly">weekly</option><option value="monthly">monthly</option></select>
+            <input className="input" placeholder={t.taskTitle} value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <textarea className="textarea" placeholder={t.taskDescription} value={description} onChange={(e) => setDescription(e.target.value)} rows={4} />
+            <select className="select" value={clientId} onChange={(e) => setClientId(e.target.value)}><option value="">{t.generalTask}</option>{clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}</select>
+            <select className="select" value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}><option value="low">{t.low}</option><option value="medium">{t.medium}</option><option value="high">{t.high}</option></select>
+            <select className="select" value={status} onChange={(e) => setStatus(e.target.value as TaskStatus)}><option value="todo">{t.todo}</option><option value="in_progress">{t.inProgress}</option><option value="done">{t.done}</option></select>
+            <select className="select" value={recurrence} onChange={(e) => setRecurrence(e.target.value as RecurrenceRule)}><option value="none">{t.noRecurrence}</option><option value="daily">{t.daily}</option><option value="weekly">{t.weekly}</option><option value="monthly">{t.monthly}</option></select>
             <input className="input" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-            <input className="input" placeholder="Tags, comma separated" value={tags} onChange={(e) => setTags(e.target.value)} />
-            <button className="button" disabled={createMutation.isPending}>{createMutation.isPending ? 'Saving...' : 'Save task'}</button>
+            <input className="input" placeholder={t.tagsPlaceholder} value={tags} onChange={(e) => setTags(e.target.value)} />
+            <button className="button" disabled={createMutation.isPending}>{createMutation.isPending ? t.saving : t.saveTask}</button>
           </form>
         </aside>
       </div>
