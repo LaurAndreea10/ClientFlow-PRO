@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="ClientFlow Pro icon">
+  <rect width="512" height="512" rx="112" fill="#7c3aed" />
+  <path fill="#ffffff" d="M150 156c0-25.4 20.6-46 46-46h120c25.4 0 46 20.6 46 46v18h-42v-18c0-2.2-1.8-4-4-4H196c-2.2 0-4 1.8-4 4v200c0 2.2 1.8 4 4 4h120c2.2 0 4-1.8 4-4v-18h42v18c0 25.4-20.6 46-46 46H196c-25.4 0-46-20.6-46-46V156Z" />
+  <path fill="#ffffff" d="M244 235h126l-36-36 30-30 87 87-87 87-30-30 36-36H244v-42Z" />
+</svg>
