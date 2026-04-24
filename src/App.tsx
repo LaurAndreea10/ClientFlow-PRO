@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/layout/AppLayout'
 import { ActivityPage } from './pages/ActivityPage'
+import { BeautyStudioPage } from './pages/BeautyStudioPage'
 import { CalendarPage } from './pages/CalendarPage'
 import { CaseStudyPage } from './pages/CaseStudyPage'
 import { ClientDetailsPage } from './pages/ClientDetailsPage'
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/time" element={<TimeTrackingPage />} />
           <Route path="/portal" element={<ClientPortalPage />} />
+          <Route path="/beauty" element={<BeautyStudioPage />} />
           <Route path="/demo-planner" element={<DemoPlannerPage />} />
           <Route path="/impact" element={<ImpactGoalsPage />} />
           <Route path="/reports" element={<ReportsPage />} />
