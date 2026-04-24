@@ -1,8 +1,14 @@
 import type { Client, DashboardStats, Note, Task, User } from '../types'
 import { buildSeed } from '../data/seed'
-import { readStorage, uid, writeStorage } from './storage'
+import {
+  AUTH_KEY,
+  createLocalSession,
+  getSession as getAuthSession,
+  login as loginWithDemoCredentials,
+  logout as clearAuthSession,
+} from '../auth/demoAuth'
+import { readStorage, writeStorage } from './storage'
 
-const SESSION_KEY = 'clientflow_session'
 const CLIENTS_KEY = 'clientflow_clients'
 const TASKS_KEY = 'clientflow_tasks'
 const NOTES_KEY = 'clientflow_notes'
@@ -26,33 +32,31 @@ function ensureSeeded(userId: string) {
 }
 
 export function getSession(): User | null {
-  return readStorage<User | null>(SESSION_KEY, null)
+  return getAuthSession()
 }
 
-export async function login(email: string, _password: string) {
-  const user: User = {
-    id: uid('user'),
-    email,
-    fullName: email.split('@')[0].replace(/[._-]/g, ' '),
+export async function login(email: string, password: string) {
+  try {
+    const demoUser = loginWithDemoCredentials(email, password)
+    ensureSeeded(demoUser.id)
+    return demoUser
+  } catch {
+    const user = createLocalSession(email)
+    writeStorage(AUTH_KEY, user)
+    ensureSeeded(user.id)
+    return user
   }
-  writeStorage(SESSION_KEY, user)
-  ensureSeeded(user.id)
-  return user
 }
 
 export async function register(fullName: string, email: string, _password: string) {
-  const user: User = {
-    id: uid('user'),
-    email,
-    fullName,
-  }
-  writeStorage(SESSION_KEY, user)
+  const user = createLocalSession(email, fullName)
+  writeStorage(AUTH_KEY, user)
   ensureSeeded(user.id)
   return user
 }
 
 export async function logout() {
-  localStorage.removeItem(SESSION_KEY)
+  clearAuthSession()
 }
 
 export async function getClients() {
@@ -64,7 +68,7 @@ export async function createClient(payload: Omit<Client, 'id' | 'createdAt' | 'u
   const userId = getUserId()
   const next: Client = {
     ...payload,
-    id: uid('client'),
+    id: crypto.randomUUID?.() ?? `client-${Date.now()}`,
     userId,
     createdAt: new Date().toISOString(),
   }
@@ -105,7 +109,7 @@ export async function createTask(payload: Omit<Task, 'id' | 'createdAt' | 'userI
   const userId = getUserId()
   const next: Task = {
     ...payload,
-    id: uid('task'),
+    id: crypto.randomUUID?.() ?? `task-${Date.now()}`,
     userId,
     createdAt: new Date().toISOString(),
   }
@@ -141,7 +145,7 @@ export async function getNotes(clientId: string) {
 export async function createNote(clientId: string, content: string) {
   const userId = getUserId()
   const next: Note = {
-    id: uid('note'),
+    id: crypto.randomUUID?.() ?? `note-${Date.now()}`,
     userId,
     clientId,
     content,
