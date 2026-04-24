@@ -1,4 +1,5 @@
 export type ClientStatus = 'lead' | 'active' | 'inactive'
+export type ClientStage = 'new' | 'qualified' | 'proposal' | 'negotiation' | 'won' | 'paused'
 export type TaskStatus = 'todo' | 'in_progress' | 'done'
 export type TaskPriority = 'low' | 'medium' | 'high'
 export type RecurrenceRule = 'none' | 'daily' | 'weekly' | 'monthly'
@@ -7,6 +8,12 @@ export interface User {
   id: string
   fullName: string
   email: string
+}
+
+export interface CustomField {
+  id: string
+  label: string
+  value: string
 }
 
 export interface Client {
@@ -19,6 +26,13 @@ export interface Client {
   status: ClientStatus
   monthlyValue: number
   createdAt: string
+  stage?: ClientStage
+  healthScore?: number
+  tags?: string[]
+  pinned?: boolean
+  archived?: boolean
+  lastContactedAt?: string
+  customFields?: CustomField[]
 }
 
 export interface Subtask {
