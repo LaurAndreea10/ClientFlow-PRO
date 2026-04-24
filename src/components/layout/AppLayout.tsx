@@ -1,4 +1,5 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { CommandPalette } from '../CommandPalette'
 import { DemoBadge } from '../DemoBadge'
 import { logout } from '../../lib/mockApi'
 
@@ -23,9 +24,9 @@ const titles: Record<string, string> = {
 }
 
 const shortcuts = [
-  { label: '⌘K Search', hint: 'Command palette mock' },
-  { label: 'N New task', hint: 'Keyboard shortcut' },
-  { label: 'G then D', hint: 'Go to dashboard' },
+  { label: '⌘K Search', hint: 'Command palette' },
+  { label: 'Quick add', hint: 'Create task flow' },
+  { label: 'Reports', hint: 'Export CSV / JSON' },
 ]
 
 export function AppLayout() {
@@ -96,6 +97,7 @@ export function AppLayout() {
             <h2 className="topbar-title">{titles[location.pathname] ?? 'Workspace'}</h2>
           </div>
           <div className="topbar-actions">
+            <CommandPalette />
             <DemoBadge />
             <Link className="button secondary" to="/tasks">Quick add</Link>
           </div>
