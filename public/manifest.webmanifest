@@ -1,12 +1,31 @@
 {
   "name": "ClientFlow Pro",
   "short_name": "ClientFlow",
-  "description": "Mobile-first CRM & workflow dashboard.",
-  "start_url": "./",
+  "description": "Mobile-first CRM & workflow dashboard with local-first PWA support.",
+  "start_url": "./#/login",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
+  "background_color": "#081120",
   "theme_color": "#7c3aed",
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Open the ClientFlow dashboard",
+      "url": "./#/dashboard",
+      "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Tasks",
+      "short_name": "Tasks",
+      "description": "Open the Kanban task workspace",
+      "url": "./#/tasks",
+      "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    }
+  ],
   "icons": [
     {
       "src": "./icon.svg",
