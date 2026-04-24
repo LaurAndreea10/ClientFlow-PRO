@@ -7,6 +7,8 @@ export const DEMO_CREDENTIALS = {
 }
 
 export const AUTH_KEY = 'clientflow_session'
+export const DEMO_USER_ID = 'demo-user'
+export const DEMO_RESET_EVENT = 'clientflow:demo-reset'
 
 export type DemoSession = User & {
   role?: string
@@ -17,7 +19,7 @@ export type DemoSession = User & {
 
 export function createDemoSession(): DemoSession {
   return {
-    id: 'demo-user',
+    id: DEMO_USER_ID,
     fullName: 'Demo User',
     email: DEMO_CREDENTIALS.email,
     role: 'Product Manager',
