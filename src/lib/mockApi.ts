@@ -1,4 +1,4 @@
-import type { Client, DashboardStats, Note, Task, User } from '../types'
+import type { Client, DashboardStats, Note, Subtask, Task, TaskComment, User } from '../types'
 import { buildSeed } from '../data/seed'
 import {
   AUTH_KEY,
@@ -17,6 +17,21 @@ function getUserId() {
   return getSession()?.id ?? 'guest'
 }
 
+function createId(prefix: string) {
+  return crypto.randomUUID?.() ?? `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
+function normalizeTask(task: Task): Task {
+  return {
+    ...task,
+    recurrence: task.recurrence ?? 'none',
+    tags: task.tags ?? [],
+    subtasks: task.subtasks ?? [],
+    comments: task.comments ?? [],
+    archived: task.archived ?? false,
+  }
+}
+
 function ensureSeeded(userId: string) {
   const clients = readStorage<Client[]>(CLIENTS_KEY, [])
   const tasks = readStorage<Task[]>(TASKS_KEY, [])
@@ -26,7 +41,7 @@ function ensureSeeded(userId: string) {
   if (!hasUserData) {
     const seed = buildSeed(userId)
     writeStorage(CLIENTS_KEY, [...clients, ...seed.clients])
-    writeStorage(TASKS_KEY, [...tasks, ...seed.tasks])
+    writeStorage(TASKS_KEY, [...tasks, ...seed.tasks.map(normalizeTask)])
     writeStorage(NOTES_KEY, [...notes, ...seed.notes])
   }
 }
@@ -68,7 +83,7 @@ export async function createClient(payload: Omit<Client, 'id' | 'createdAt' | 'u
   const userId = getUserId()
   const next: Client = {
     ...payload,
-    id: crypto.randomUUID?.() ?? `client-${Date.now()}`,
+    id: createId('client'),
     userId,
     createdAt: new Date().toISOString(),
   }
@@ -102,17 +117,17 @@ export async function deleteClient(id: string) {
 
 export async function getTasks() {
   const userId = getUserId()
-  return readStorage<Task[]>(TASKS_KEY, []).filter((item) => item.userId === userId)
+  return readStorage<Task[]>(TASKS_KEY, []).filter((item) => item.userId === userId).map(normalizeTask)
 }
 
 export async function createTask(payload: Omit<Task, 'id' | 'createdAt' | 'userId'>) {
   const userId = getUserId()
-  const next: Task = {
+  const next: Task = normalizeTask({
     ...payload,
-    id: crypto.randomUUID?.() ?? `task-${Date.now()}`,
+    id: createId('task'),
     userId,
     createdAt: new Date().toISOString(),
-  }
+  })
   const tasks = readStorage<Task[]>(TASKS_KEY, [])
   writeStorage(TASKS_KEY, [next, ...tasks])
   return next
@@ -123,7 +138,7 @@ export async function updateTask(id: string, payload: Partial<Task>) {
   let updated: Task | null = null
   const next = tasks.map((item) => {
     if (item.id !== id) return item
-    updated = { ...item, ...payload }
+    updated = normalizeTask({ ...item, ...payload })
     return updated
   })
   writeStorage(TASKS_KEY, next)
@@ -137,6 +152,43 @@ export async function deleteTask(id: string) {
   return true
 }
 
+export async function archiveTask(id: string) {
+  return updateTask(id, { archived: true })
+}
+
+export async function restoreTask(id: string) {
+  return updateTask(id, { archived: false })
+}
+
+export async function addSubtask(taskId: string, title: string) {
+  const tasks = await getTasks()
+  const task = tasks.find((item) => item.id === taskId)
+  if (!task) throw new Error('Task not found')
+  const subtasks: Subtask[] = [...(task.subtasks ?? []), { id: createId('subtask'), title, done: false }]
+  return updateTask(taskId, { subtasks })
+}
+
+export async function toggleSubtask(taskId: string, subtaskId: string) {
+  const tasks = await getTasks()
+  const task = tasks.find((item) => item.id === taskId)
+  if (!task) throw new Error('Task not found')
+  const subtasks = (task.subtasks ?? []).map((subtask) =>
+    subtask.id === subtaskId ? { ...subtask, done: !subtask.done } : subtask,
+  )
+  return updateTask(taskId, { subtasks })
+}
+
+export async function addTaskComment(taskId: string, content: string) {
+  const tasks = await getTasks()
+  const task = tasks.find((item) => item.id === taskId)
+  if (!task) throw new Error('Task not found')
+  const comments: TaskComment[] = [
+    ...(task.comments ?? []),
+    { id: createId('comment'), author: getSession()?.fullName ?? 'Demo User', content, createdAt: new Date().toISOString() },
+  ]
+  return updateTask(taskId, { comments })
+}
+
 export async function getNotes(clientId: string) {
   const userId = getUserId()
   return readStorage<Note[]>(NOTES_KEY, []).filter((item) => item.userId === userId && item.clientId === clientId)
@@ -145,7 +197,7 @@ export async function getNotes(clientId: string) {
 export async function createNote(clientId: string, content: string) {
   const userId = getUserId()
   const next: Note = {
-    id: crypto.randomUUID?.() ?? `note-${Date.now()}`,
+    id: createId('note'),
     userId,
     clientId,
     content,
@@ -163,7 +215,7 @@ export async function getClientById(id: string) {
 
 export async function getDashboardStats(): Promise<DashboardStats> {
   const clients = await getClients()
-  const tasks = await getTasks()
+  const tasks = (await getTasks()).filter((task) => !task.archived)
   const totalClients = clients.length
   const activeTasks = tasks.filter((item) => item.status !== 'done').length
   const completedTasks = tasks.filter((item) => item.status === 'done').length
