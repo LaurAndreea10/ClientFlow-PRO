@@ -12,11 +12,13 @@ import { logout, resetDemoWorkspace } from '../../lib/mockApi'
 
 const linkKeys = [
   { to: '/dashboard', key: 'dashboard' },
+  { to: '/suite', key: 'suite' },
   { to: '/clients', key: 'clients' },
   { to: '/tasks', key: 'tasks' },
   { to: '/reports', key: 'reports' },
   { to: '/calendar', key: 'calendar' },
   { to: '/activity', key: 'activity' },
+  { to: '/case-study', key: 'caseStudy' },
   { to: '/settings', key: 'settings' },
 ] as const
 
