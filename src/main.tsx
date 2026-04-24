@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import './index.css'
+import './premium.css'
 
 const queryClient = new QueryClient()
 const appBaseUrl = new URL(document.querySelector<HTMLScriptElement>('script[type="module"]')?.src ?? window.location.href).pathname
