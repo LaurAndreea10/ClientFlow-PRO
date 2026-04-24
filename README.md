@@ -15,6 +15,7 @@
 - **Best route:** Start Here → Command Center → Automations → Portfolio Score
 - **Tech:** React, TypeScript, Vite, React Query
 - **Status:** portfolio demo, local-first, Supabase-ready
+- **Release notes:** [v1.0.0 — Portfolio Demo](docs/RELEASE_NOTES_V1.0.0.md)
 
 > **Demo note:** data is stored in your browser with `localStorage`. Access links and portal links are simulated for portfolio review; production security would use backend auth and Supabase Row Level Security.
 
@@ -57,6 +58,7 @@ No account needed. Click **Try Demo** on the landing or login page to enter inst
 - [Manual Test Flow](docs/MANUAL_TEST_FLOW.md)
 - [Product Case Study](docs/PRODUCT_CASE_STUDY.md)
 - [Supabase-ready Architecture](docs/SUPABASE_READY.md)
+- [Release Notes v1.0.0](docs/RELEASE_NOTES_V1.0.0.md)
 
 ## Why this project stands out
 
