@@ -7,6 +7,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { ToastProvider } from './components/ToastProvider'
 import './index.css'
 import './premium.css'
+import './suite.css'
 
 const queryClient = new QueryClient()
 const appBaseUrl = new URL(document.querySelector<HTMLScriptElement>('script[type="module"]')?.src ?? window.location.href).pathname
