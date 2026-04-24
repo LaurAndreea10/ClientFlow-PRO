@@ -1,6 +1,7 @@
 export type ClientStatus = 'lead' | 'active' | 'inactive'
 export type TaskStatus = 'todo' | 'in_progress' | 'done'
 export type TaskPriority = 'low' | 'medium' | 'high'
+export type RecurrenceRule = 'none' | 'daily' | 'weekly' | 'monthly'
 
 export interface User {
   id: string
@@ -20,6 +21,19 @@ export interface Client {
   createdAt: string
 }
 
+export interface Subtask {
+  id: string
+  title: string
+  done: boolean
+}
+
+export interface TaskComment {
+  id: string
+  author: string
+  content: string
+  createdAt: string
+}
+
 export interface Task {
   id: string
   userId: string
@@ -30,6 +44,11 @@ export interface Task {
   priority: TaskPriority
   dueDate: string
   createdAt: string
+  recurrence?: RecurrenceRule
+  tags?: string[]
+  subtasks?: Subtask[]
+  comments?: TaskComment[]
+  archived?: boolean
 }
 
 export interface Note {
