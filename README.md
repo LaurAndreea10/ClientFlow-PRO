@@ -1,6 +1,6 @@
 # ClientFlow PRO
 
-> Complete best-of SaaS operations suite — Start Here demo flow, workspace onboarding, industry-specific CRM configuration, real rule-based UI permissions, team access roles, invite links, Command Center, global search, automations, notifications, CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, portfolio score, backup/restore, bilingual EN/RO interface, Supabase-ready architecture, PWA support, and GitHub Pages-safe routing.
+> Complete best-of SaaS operations suite — public landing page, Start Here demo flow, workspace onboarding, industry-specific CRM configuration, domain-specific seed data, real rule-based UI permissions, team access roles, invite links, Command Center, global search, automations, notifications, CRM, tasks, invoices, service templates, time tracking, client portal preview, beauty booking studio, reports, calendar, AI Copilot, demo planner, impact goals, portfolio score, backup/restore, bilingual EN/RO interface, Supabase-ready architecture, PWA support, and GitHub Pages-safe routing.
 
 ClientFlow PRO is a portfolio-ready operational dashboard that merges the strongest ideas from:
 
@@ -14,9 +14,11 @@ The result is a modern React + TypeScript workspace that works without a paid ba
 
 ## 🚀 Live Demo
 
-**→ [Open the live demo](https://laurandreea10.github.io/ClientFlow-PRO/#/login)**
+**→ [Open the landing page](https://laurandreea10.github.io/ClientFlow-PRO/#/)**
 
-No account needed. Click **"Try Demo"** on the login page to enter the app instantly.
+**→ [Open the login demo](https://laurandreea10.github.io/ClientFlow-PRO/#/login)**
+
+No account needed. Click **"Try Demo"** on the landing or login page to enter the app instantly.
 
 Or sign in with demo credentials:
 
@@ -31,11 +33,13 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 
 ## Product highlights
 
+- **Public landing page** at `/#/` and `/#/landing` with product explanation, industries, roles, demo credentials and CTA buttons
 - **Start Here** recruiter flow at `/#/start-here` with the recommended 6-step product demo
 - **Workspace onboarding** from account creation with industry-specific CRM setup
 - **Industry templates** for Beauty, Mecanic auto, Kinetoterapeut, Psiholog and Custom CRM
-- **Industry-aware CRM UI** in Clients, Tasks, Invoices, Services, Time Tracking and Beauty Studio
-- **Real rule-based UI permissions**: unsupported Add/Edit/Delete/Status actions are disabled by role
+- **Domain-specific demo seed**: Auto, Kineto, Psychology, Beauty and Custom generate relevant clients/tasks at workspace creation
+- **Industry-aware CRM UI** in Clients, Tasks, Invoices, Services, Time Tracking, Portal, Impact and Beauty Studio
+- **Real rule-based UI permissions**: unsupported Add/Edit/Delete/Status/Run/Restore actions are disabled by role
 - **Team access management** with Admin, Angajat and Angajat nou roles
 - **Permission matrix** for view, add, edit, delete, manage permissions, validate client status and full access
 - **Admin invite links**: admin can create employee access and copy/send a ClientFlow PRO link
@@ -59,19 +63,20 @@ All changes in demo mode are saved locally in your browser. Use **Reset demo dat
 - **Backup / Restore JSON** in Settings for full local workspace export/import, including suite modules, workspace configuration, roles, access links, Beauty Studio bookings, automation rules and notifications
 - **Case Study page** inside the app for product story, problem, solution, architecture and future direction
 - Bilingual EN/RO interface across core flows
-- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/start-here`, `/#/workspace-setup`, `/#/command-center`, `/#/automations`, `/#/notifications`, `/#/suite`, `/#/beauty`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
+- GitHub Pages-safe routing through `HashRouter` for reliable deep links like `/#/`, `/#/start-here`, `/#/workspace-setup`, `/#/command-center`, `/#/automations`, `/#/notifications`, `/#/suite`, `/#/beauty`, `/#/invoices`, `/#/demo-planner` and `/#/impact`
 - React Query cache invalidation for a snappy local-first data layer
 - PWA-ready manifest, service worker registration and offline fallback
 
 ## Recommended demo flow
 
-1. `/#/login` → click **Try Demo**
-2. `/#/start-here` → follow the guided demo path
-3. `/#/command-center` → show operational overview
-4. `/#/workspace-setup` → show industry setup, roles and invite links
-5. `/#/clients` or `/#/tasks` → show permission-aware UI and industry labels
-6. `/#/automations` → run rules and generate notifications
-7. `/#/portfolio-score` → close with readiness score
+1. `/#/` → open the public landing page
+2. `/#/login` → click **Try Demo**
+3. `/#/start-here` → follow the guided demo path
+4. `/#/command-center` → show operational overview
+5. `/#/workspace-setup` → show industry setup, roles and invite links
+6. `/#/clients` or `/#/tasks` → show permission-aware UI and industry labels
+7. `/#/automations` → run rules and generate notifications
+8. `/#/portfolio-score` → close with readiness score
 
 ## Workspace and access roles
 
@@ -85,22 +90,24 @@ Adminul poate crea un profil de acces cu nume, email, rol și permisiuni custom,
 
 ## Industry CRM templates
 
-| Industry | CRM focus |
-| -------- | --------- |
-| Beauty / Salon | Programări, servicii, stiliști, retenție VIP |
-| Mecanic auto | Diagnoză, deviz, intervenție, predare mașină |
-| Kinetoterapeut | Evaluare, plan tratament, ședințe, reevaluare |
-| Psiholog | Intake, ședințe, consimțământ, follow-up |
-| Personalizat | Câmpuri, statusuri și etichete CRM configurabile |
+| Industry | CRM focus | Seed examples |
+| -------- | --------- | ------------- |
+| Beauty / Salon | Programări, servicii, stiliști, retenție VIP | VIP balayage client, nails returning client, reminder tasks |
+| Mecanic auto | Fișă mașină, diagnoză, deviz, reparație, predare | VW Golf 7, BMW X3, deviz, fișă mașină |
+| Kinetoterapeut | Diagnostic, plan tratament, ședințe, progres | Recuperare genunchi, durere lombară, reevaluare |
+| Psiholog | Intake, consimțământ, tip ședință, confidențialitate | Client intake, consimțământ, follow-up terapeutic |
+| Personalizat | Câmpuri, statusuri și etichete CRM configurabile | Client custom și task de configurare flux |
 
 ## What this version includes
 
 - Demo login with one-click access and local session state
 - Account creation with domain-specific workspace setup
+- Domain-specific seed data generated on workspace creation
 - Workspace Access page with CRM profile editing, custom fields, custom statuses and team invitations
 - Accept Access route for invite links
+- Public landing page before login
 - Start Here page with recruiter-focused demo flow
-- Permission-aware Clients, Tasks, Invoices, Services, Time Tracking and Beauty Studio pages
+- Permission-aware Clients, Tasks, Invoices, Services, Time Tracking, Portal, Automations, Demo Planner, Impact Goals, Settings and Beauty Studio pages
 - First-run interactive demo tour with guided navigation through Dashboard, Clients, Tasks and Reports
 - Toast notification system with success/info states, dismiss actions and undo support
 - Command Center page with operational KPIs and next actions
@@ -121,7 +128,7 @@ Adminul poate crea un profil de acces cu nume, email, rol și permisiuni custom,
 - Reports page with analytics charts, CSV export, JSON export and print/PDF-ready output
 - Calendar timeline with week/month views, due today, overdue and upcoming widgets
 - Activity log with local audit timeline and notification center mock
-- Settings page with demo profile, bilingual language preference, backup/restore, theme preference, density, reduced motion, autosave and notifications
+- Settings page with demo profile, bilingual language preference, role-aware backup/restore, theme preference, density, reduced motion, autosave and notifications
 - Best-of Suite page with automation flow, product readiness score, demo styles and roadmap modules
 - Case Study page with product narrative and technical direction
 - Supabase-ready architecture note with suggested tables, RLS sketch and migration path
@@ -134,6 +141,7 @@ Adminul poate crea un profil de acces cu nume, email, rol și permisiuni custom,
 | Area | Included demo content |
 | ---- | --------------------- |
 | Workspace | Industry template, custom CRM labels, statuses, fields and team access profiles |
+| Domain seed | Auto/Kineto/Psychology/Beauty/Custom-specific clients and tasks |
 | Clients | Active, lead and inactive accounts with tags, pipeline stages, health scores and custom fields |
 | Tasks | Todo, in-progress and done tasks with priorities, due dates, recurrence, subtasks and comments |
 | Invoices | Draft, sent and paid invoices with printable layout |
@@ -161,7 +169,7 @@ Required monthly cost: **€0**
 
 - TypeScript data models for clients, custom fields, tasks, subtasks, comments, recurrence, suite modules, automations, notifications, workspace profiles and team access roles
 - Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
-- Workspace access model through `src/lib/workspaceAccess.ts`
+- Workspace access, permission and industry seed model through `src/lib/workspaceAccess.ts`
 - Suite module storage through `src/lib/suiteStorage.ts`
 - Automation rule engine through `src/lib/automationEngine.ts`
 - Unified search helper through `src/lib/globalSearch.ts`
