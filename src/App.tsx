@@ -24,6 +24,7 @@ import { ReportsPage } from './pages/ReportsPage'
 import { SearchPage } from './pages/SearchPage'
 import { ServicesPage } from './pages/ServicesPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { StartHerePage } from './pages/StartHerePage'
 import { SuitePage } from './pages/SuitePage'
 import { TasksPage } from './pages/TasksPage'
 import { TimeTrackingPage } from './pages/TimeTrackingPage'
@@ -40,7 +41,8 @@ export default function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route index element={<Navigate to="/start-here" replace />} />
+          <Route path="/start-here" element={<StartHerePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/workspace-setup" element={<WorkspaceSetupPage />} />
           <Route path="/command-center" element={<CommandCenterPage />} />
