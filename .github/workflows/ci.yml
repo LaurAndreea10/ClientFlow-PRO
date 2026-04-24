@@ -1,12 +1,37 @@
 name: CI
 
 on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  info:
-    name: CI disabled while Pages deploy is stabilized
+  quality:
+    name: Typecheck and build
     runs-on: ubuntu-latest
     steps:
-      - name: Info
-        run: echo "CI is temporarily manual-only. Use Deploy to GitHub Pages for build and deployment checks."
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload production build
+        uses: actions/upload-artifact@v4
+        with:
+          name: clientflow-pro-dist
+          path: dist
