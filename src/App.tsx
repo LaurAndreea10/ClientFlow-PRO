@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { AcceptAccessPage } from './pages/AcceptAccessPage'
 import { AppLayout } from './components/layout/AppLayout'
 import { ActivityPage } from './pages/ActivityPage'
 import { AutomationsPage } from './pages/AutomationsPage'
@@ -26,6 +27,7 @@ import { SettingsPage } from './pages/SettingsPage'
 import { SuitePage } from './pages/SuitePage'
 import { TasksPage } from './pages/TasksPage'
 import { TimeTrackingPage } from './pages/TimeTrackingPage'
+import { WorkspaceSetupPage } from './pages/WorkspaceSetupPage'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 
 export default function App() {
@@ -34,11 +36,13 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/portal-preview/:code" element={<PortalPreviewPage />} />
+      <Route path="/accept-access/:accessId" element={<AcceptAccessPage />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/workspace-setup" element={<WorkspaceSetupPage />} />
           <Route path="/command-center" element={<CommandCenterPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/automations" element={<AutomationsPage />} />
