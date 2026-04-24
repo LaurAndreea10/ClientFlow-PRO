@@ -52,6 +52,21 @@ export type ImpactGoal = {
   dueDate: string
 }
 
+export type BeautyBooking = {
+  id: string
+  client: string
+  email: string
+  phone: string
+  service: string
+  stylist: string
+  date: string
+  time: string
+  status: 'booked' | 'pending' | 'completed' | 'vip-follow-up'
+  spend: number
+  notes: string
+  retentionLabel: 'New' | 'Returning' | 'VIP' | 'At risk'
+}
+
 const seeds = {
   invoices: [
     { id: 'inv-1', client: 'Bloom Studio', service: 'Growth Retainer', amount: 1800, status: 'sent', dueDate: '2026-05-05', createdAt: '2026-04-20' },
@@ -80,6 +95,11 @@ const seeds = {
     { id: 'goal-2', title: 'Recruiter clarity', metric: 'Demo steps documented', current: 5, target: 6, dueDate: '2026-05-01' },
     { id: 'goal-3', title: 'Zero-cost deployability', metric: 'Paid services required', current: 0, target: 0, dueDate: '2026-04-24' },
   ] as ImpactGoal[],
+  beauty: [
+    { id: 'beauty-1', client: 'Mia Flores', email: 'mia@beauty.demo', phone: '+40 700 810 100', service: 'Color & Balayage', stylist: 'Elena', date: '2026-05-03', time: '10:00', status: 'booked', spend: 240, notes: 'Prefers warm brunette tones. Send 24h reminder.', retentionLabel: 'VIP' },
+    { id: 'beauty-2', client: 'Sofia Marin', email: 'sofia@beauty.demo', phone: '+40 700 810 101', service: 'Nails Signature', stylist: 'Daria', date: '2026-05-03', time: '12:30', status: 'pending', spend: 85, notes: 'Confirm design before appointment.', retentionLabel: 'Returning' },
+    { id: 'beauty-3', client: 'Ana Ionescu', email: 'ana@beauty.demo', phone: '+40 700 810 102', service: 'Facial Treatment', stylist: 'Mara', date: '2026-05-04', time: '15:00', status: 'vip-follow-up', spend: 160, notes: 'Schedule return reminder in 5 weeks.', retentionLabel: 'At risk' },
+  ] as BeautyBooking[],
 }
 
 const keyMap = {
@@ -89,6 +109,7 @@ const keyMap = {
   portals: 'clientflow_suite_portals',
   demos: 'clientflow_suite_demo_plans',
   impact: 'clientflow_suite_impact_goals',
+  beauty: 'clientflow_suite_beauty_bookings',
 } as const
 
 function uid(prefix: string) {
