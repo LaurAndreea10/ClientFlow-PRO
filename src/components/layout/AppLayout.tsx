@@ -1,4 +1,5 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { DemoBadge } from '../DemoBadge'
 import { logout } from '../../lib/mockApi'
 
 const links = [
@@ -68,7 +69,7 @@ export function AppLayout() {
             <h2 className="topbar-title">{titles[location.pathname] ?? 'Workspace'}</h2>
           </div>
           <div className="topbar-actions">
-            <div className="pill">Local demo mode</div>
+            <DemoBadge />
           </div>
         </div>
         <Outlet />
