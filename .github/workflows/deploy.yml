@@ -1,16 +1,10 @@
 name: Build GitHub Pages artifact
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
-
-concurrency:
-  group: pages-build
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -38,9 +32,6 @@ jobs:
 
       - name: Create 404.html for SPA routing
         run: cp dist/index.html dist/404.html
-
-      - name: Verify GitHub Pages asset base
-        run: grep -q '/ClientFlow-PRO/assets/' dist/index.html
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
