@@ -1,9 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { MetricCard } from '../components/ui/MetricCard'
+import { useLanguage } from '../lib/i18n'
 import { getClients, getDashboardStats, getTasks } from '../lib/mockApi'
 
 export function DashboardPage() {
+  const { copy } = useLanguage()
+  const t = copy.dashboard
   const { data: stats } = useQuery({
     queryKey: ['dashboard'],
     queryFn: getDashboardStats,
@@ -20,9 +23,9 @@ export function DashboardPage() {
   })
 
   const chartData = [
-    { name: 'Lead', count: clients.filter((item) => item.status === 'lead').length },
-    { name: 'Active', count: clients.filter((item) => item.status === 'active').length },
-    { name: 'Inactive', count: clients.filter((item) => item.status === 'inactive').length },
+    { name: t.statuses.Lead, count: clients.filter((item) => item.status === 'lead').length },
+    { name: t.statuses.Active, count: clients.filter((item) => item.status === 'active').length },
+    { name: t.statuses.Inactive, count: clients.filter((item) => item.status === 'inactive').length },
   ]
 
   const revenueTarget = Math.max(1, Math.round((stats?.revenue ?? 0) * 1.2))
@@ -32,44 +35,44 @@ export function DashboardPage() {
       <section className="hero">
         <div className="hero-grid">
           <div>
-            <p className="eyebrow">Main workspace</p>
-            <h1 className="page-title">Run your client pipeline from one dashboard.</h1>
+            <p className="eyebrow">{t.eyebrow}</p>
+            <h1 className="page-title">{t.title}</h1>
             <p className="muted" style={{ maxWidth: 620 }}>
-              This project is intentionally portfolio-friendly: realistic data model, clean UI, local persistence and a structure that can later connect to a real API.
+              {t.description}
             </p>
           </div>
           <div className="kpi-strip">
             <div className="kpi-mini">
-              <div className="small muted">Revenue target</div>
+              <div className="small muted">{t.revenueTarget}</div>
               <div className="stat-value" style={{ fontSize: '1.6rem' }}>€{revenueTarget}</div>
             </div>
             <div className="kpi-mini">
-              <div className="small muted">Response time</div>
+              <div className="small muted">{t.responseTime}</div>
               <div className="stat-value" style={{ fontSize: '1.6rem' }}>24h</div>
             </div>
             <div className="kpi-mini">
-              <div className="small muted">Storage mode</div>
-              <div className="stat-value" style={{ fontSize: '1.6rem' }}>Local</div>
+              <div className="small muted">{t.storageMode}</div>
+              <div className="stat-value" style={{ fontSize: '1.6rem' }}>{t.local}</div>
             </div>
           </div>
         </div>
       </section>
 
       <section className="grid stats">
-        <MetricCard label="Total clients" value={stats?.totalClients ?? 0} hint="Seeded instantly" />
-        <MetricCard label="Active tasks" value={stats?.activeTasks ?? 0} hint="Open workload" />
-        <MetricCard label="Completed tasks" value={stats?.completedTasks ?? 0} hint="Tracked locally" />
-        <MetricCard label="Monthly revenue" value={`€${stats?.revenue ?? 0}`} hint="From client retainers" />
+        <MetricCard label={t.totalClients} value={stats?.totalClients ?? 0} hint={t.seededInstantly} />
+        <MetricCard label={t.activeTasks} value={stats?.activeTasks ?? 0} hint={t.openWorkload} />
+        <MetricCard label={t.completedTasks} value={stats?.completedTasks ?? 0} hint={t.trackedLocally} />
+        <MetricCard label={t.monthlyRevenue} value={`€${stats?.revenue ?? 0}`} hint={t.fromRetainers} />
       </section>
 
       <section className="two-col">
         <div className="card card-pad">
           <div className="card-title-row">
             <div>
-              <h2 style={{ margin: 0 }}>Client status mix</h2>
-              <div className="small muted">Quick overview for lead quality and account health.</div>
+              <h2 style={{ margin: 0 }}>{t.clientStatusMix}</h2>
+              <div className="small muted">{t.statusHint}</div>
             </div>
-            <div className="pill">Demo chart</div>
+            <div className="pill">{t.demoChart}</div>
           </div>
           <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer>
@@ -87,8 +90,8 @@ export function DashboardPage() {
         <div className="card card-pad">
           <div className="card-title-row">
             <div>
-              <h2 style={{ margin: 0 }}>Recent tasks</h2>
-              <div className="small muted">Latest delivery items from your local workspace.</div>
+              <h2 style={{ margin: 0 }}>{t.recentTasks}</h2>
+              <div className="small muted">{t.recentTasksHint}</div>
             </div>
           </div>
           <div className="list">
@@ -99,11 +102,11 @@ export function DashboardPage() {
                   <span className={`badge ${task.status}`}>{task.status.replace('_', ' ')}</span>
                 </div>
                 <div className="small muted" style={{ marginTop: 6 }}>
-                  Due: {task.dueDate || 'No deadline'}
+                  {t.due}: {task.dueDate || t.noDeadline}
                 </div>
               </div>
             ))}
-            {tasks.length === 0 ? <div className="empty-state">No tasks available yet.</div> : null}
+            {tasks.length === 0 ? <div className="empty-state">{t.emptyTasks}</div> : null}
           </div>
         </div>
       </section>
