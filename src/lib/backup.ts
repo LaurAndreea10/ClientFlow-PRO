@@ -12,6 +12,7 @@ const BACKUP_KEYS = [
   'clientflow_suite_portals',
   'clientflow_suite_demo_plans',
   'clientflow_suite_impact_goals',
+  'clientflow_suite_beauty_bookings',
 ] as const
 
 export type WorkspaceBackup = {
