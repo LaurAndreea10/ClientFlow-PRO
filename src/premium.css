@@ -192,7 +192,8 @@
   gap: 3px;
 }
 
-.tasks-layout {
+.tasks-layout,
+.clients-layout {
   grid-template-columns: minmax(0, 1fr) 360px;
   align-items: start;
 }
@@ -223,7 +224,8 @@
   box-shadow: 0 14px 28px rgba(2, 8, 23, 0.22);
 }
 
-.kanban-card.archived {
+.kanban-card.archived,
+.client-card.archived {
   opacity: 0.62;
   filter: grayscale(0.3);
 }
@@ -244,14 +246,16 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.subtask-progress {
+.subtask-progress,
+.health-bar {
   height: 8px;
   overflow: hidden;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
 }
 
-.subtask-progress span {
+.subtask-progress span,
+.health-bar span {
   display: block;
   height: 100%;
   border-radius: inherit;
@@ -275,6 +279,57 @@
   gap: 8px;
 }
 
+.inline-form.three {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+}
+
+.client-pipeline {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(240px, 1fr));
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.client-stage {
+  min-width: 240px;
+  padding: 14px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.032);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.client-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 24px rgba(2, 8, 23, 0.2);
+}
+
+.icon-button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #facc15;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.health-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted-2);
+  font-size: 0.9rem;
+}
+
 .sticky-filter-card {
   position: sticky;
   top: 12px;
@@ -296,7 +351,8 @@
     grid-template-columns: repeat(2, minmax(220px, 1fr));
   }
 
-  .tasks-layout {
+  .tasks-layout,
+  .clients-layout {
     grid-template-columns: 1fr;
   }
 
@@ -312,7 +368,8 @@
 
 @media (max-width: 700px) {
   .calendar-grid,
-  .kanban-board {
+  .kanban-board,
+  .client-pipeline {
     grid-template-columns: 1fr;
   }
 
@@ -321,7 +378,8 @@
     flex-direction: column;
   }
 
-  .inline-form {
+  .inline-form,
+  .inline-form.three {
     grid-template-columns: 1fr;
   }
 }
