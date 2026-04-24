@@ -1,6 +1,6 @@
 # ClientFlow PRO
 
-> All-in-one SaaS business management dashboard — clients, tasks, reports, calendar, kanban, activity log, command palette, and settings.
+> All-in-one SaaS business management dashboard — clients, tasks, reports, calendar, kanban, activity log, command palette, onboarding tour, notifications, and settings.
 
 A mobile-first CRM and workflow dashboard built with React, TypeScript, Vite, and local-first storage.
 
@@ -24,11 +24,14 @@ All changes in demo mode are saved locally in your browser — refresh freely, n
 ## What this version includes
 
 - Demo login with one-click access and local session state
+- First-run interactive demo tour with guided navigation through Dashboard, Clients, Tasks and Reports
+- Toast notification system with success/info states, dismiss actions and undo support
 - Dashboard with KPI cards, workload widgets, revenue target and client status chart
 - Advanced Clients workspace with pipeline view, table view, search, filters, pinned accounts, archive/restore and tags
 - Client health score, pipeline stages, last-contact tracking and custom CRM fields
 - Client detail pages with account controls, linked tasks, custom fields and local notes timeline
 - Advanced Tasks workspace with Kanban columns, status changes, archive/restore, saved views and sticky filters
+- Undo for client/task archive actions
 - Recurring tasks, tags, subtasks with progress, and task comments
 - Reports page with analytics charts, CSV export, JSON export and print/PDF-ready output
 - Calendar timeline with week/month views, due today, overdue and upcoming widgets
@@ -75,6 +78,8 @@ src/
 - Local data adapter through `mockApi.ts`, designed to be replaceable with a real backend later
 - Route protection with local auth session
 - React Query for async state management and cache invalidation
+- Reusable toast provider for notifications and undo flows
+- First-run onboarding/demo tour persisted in localStorage
 - Separate premium UI stylesheet for advanced workspace components
 - GitHub Actions CI for typecheck and production build
 
@@ -94,7 +99,7 @@ npm run build
 
 ## Repo description
 
-Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, advanced client pipeline, health score, custom fields, Kanban, recurring tasks, subtasks, comments, analytics, command palette and local-first storage.
+Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support, advanced client pipeline, health score, custom fields, Kanban, recurring tasks, subtasks, comments, analytics, command palette, onboarding tour, notifications, undo actions and local-first storage.
 
 ## Repo topics
 
@@ -104,6 +109,7 @@ Mobile-first CRM & workflow dashboard built with React, TypeScript, PWA support,
 
 - Kept the app local-first to avoid cost and deployment complexity
 - Client health score, task comments, recurrence and notifications are local mock features, not server-backed collaboration
+- Undo is implemented for selected local actions, not as a full global event-sourcing system
 - PDF export uses the browser print flow instead of a paid document service
 - Service worker is intentionally simple and portfolio-friendly
 
