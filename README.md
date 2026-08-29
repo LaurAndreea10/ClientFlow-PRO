@@ -1,5 +1,17 @@
 # ClientFlow PRO
 
+## Technical proof
+
+| Area | Evidence |
+| --- | --- |
+| Stack | React 18, TypeScript 5, Vite, React Query, PWA, GitHub Actions |
+| Architecture | Local-first domain model, replaceable data adapter, permission-aware views and Supabase-ready migration plan |
+| Ownership | Product concept, UX structure, front-end implementation and documentation by Laura Andreea |
+| Setup | `npm install` → `npm run dev`; quality checks: `npm run typecheck` and `npm run build` |
+| Source | [Repository](https://github.com/LaurAndreea10/ClientFlow-PRO) · [Live demo](https://laurandreea10.github.io/ClientFlow-PRO/#/) |
+
+**Scope note:** access roles and portal links are portfolio simulations. Production enforcement requires backend authentication and Row Level Security.
+
 ![CI](https://github.com/LaurAndreea10/ClientFlow-PRO/actions/workflows/ci.yml/badge.svg)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
